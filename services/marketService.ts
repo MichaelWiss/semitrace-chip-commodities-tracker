@@ -4,6 +4,15 @@ import { Commodity, CommodityCategory, PricePoint, PowerHub, GlobalEnergyMetrics
 const API_KEY = import.meta.env.VITE_API_KEY || 'demo';
 const BASE_URL = 'https://www.alphavantage.co/query';
 
+// Weather Data interface for Open-Meteo API
+interface WeatherData {
+  hourly: {
+    temperature_2m: number[];
+    shortwave_radiation: number[];
+    wind_speed_10m: number[];
+  };
+}
+
 // Commodities to fetch with their API function mapping
 const COMMODITY_MAP: Record<string, { 
     func: string, 
@@ -153,7 +162,7 @@ const fetchRealData = async (commodityKey: string): Promise<PricePoint[] | null>
     const data = await response.json();
     
     if (data.data && Array.isArray(data.data)) {
-        return data.data.slice(0, 30).reverse().map((pt: any) => ({
+        return data.data.slice(0, 30).reverse().map((pt: { date: string; value: string }) => ({
             date: new Date(pt.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
             value: parseFloat(pt.value)
         }));
@@ -325,7 +334,7 @@ export const getCommodities = async (): Promise<Commodity[]> => {
 // --- REAL ENERGY API IMPLEMENTATION ---
 
 // Helper: Fetch weather from Open-Meteo with wind
-async function fetchWeatherData(lat: number, lng: number) {
+async function fetchWeatherData(lat: number, lng: number): Promise<WeatherData> {
     try {
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&hourly=temperature_2m,shortwave_radiation,wind_speed_10m&forecast_days=1`;
         const res = await fetch(url);
@@ -344,7 +353,7 @@ async function fetchWeatherData(lat: number, lng: number) {
 }
 
 // Helper: Fetch UK Carbon Intensity
-async function fetchUKCarbon() {
+async function fetchUKCarbon(): Promise<number> {
     try {
         const res = await fetch('https://api.carbonintensity.org.uk/intensity');
         if (!res.ok) throw new Error('Carbon API failed');
@@ -383,7 +392,7 @@ export const getPowerHubs = async (): Promise<PowerHub[]> => {
     ]);
 
     // Helper to generate Forecast Array with Wind and Solar AND Carbon
-    const createForecast = (weatherData: any, baseCarbon: number): PowerForecast[] => {
+    const createForecast = (weatherData: WeatherData, baseCarbon: number): PowerForecast[] => {
         const nowHour = new Date().getHours();
         const temps = weatherData.hourly.temperature_2m;
         const rads = weatherData.hourly.shortwave_radiation;
@@ -435,7 +444,13 @@ export const getPowerHubs = async (): Promise<PowerHub[]> => {
         return parseFloat((base * mult).toFixed(2));
     };
 
-    const buildHub = (id: string, name: string, region: string, weather: any, baseCarbon: number, basePrice: number, mix: any): PowerHub => {
+    interface EnergyMix {
+      nuclear: number;
+      gas: number;
+      renewables: number;
+      coal: number;
+    }
+    const buildHub = (id: string, name: string, region: string, weather: WeatherData, baseCarbon: number, basePrice: number, mix: EnergyMix): PowerHub => {
         // Pass baseCarbon to forecast logic
         const forecast = createForecast(weather, baseCarbon);
         const currentStrain = getStrain(forecast);
@@ -505,10 +520,23 @@ export const getEnergyMetrics = async (): Promise<GlobalEnergyMetrics> => {
 
 // --- TOOLING & INDUSTRIAL BASE IMPLEMENTATION ---
 
+interface ToolingEntityRaw {
+  id: string;
+  symbol: string;
+  name: string;
+  role: 'Lithography' | 'Compute' | 'Foundry' | 'Etch/Deposition' | 'Inspection';
+  price: number;
+  moat: 'Wide' | 'Medium' | 'Narrow';
+  backlog: string;
+  dominance: number;
+  node: string;
+  volatility: number;
+}
+
 export const getToolingEntities = async (): Promise<ToolingEntity[]> => {
     // Simulated data with realistic values for a demo
     // In a real app, price would come from Alpha Vantage, but complex metrics like Backlog need bespoke data sources.
-    const entities: any[] = [
+    const entities: ToolingEntityRaw[] = [
         {
             id: 'asml',
             symbol: 'ASML',

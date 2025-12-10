@@ -9,11 +9,11 @@ export const ToolingTracker: React.FC = () => {
   const [entities, setEntities] = useState<ToolingEntity[]>([]);
 
   useEffect(() => {
-    const fetch = async () => {
+    const loadToolingData = async () => {
       const data = await getToolingEntities();
       setEntities(data);
     };
-    fetch();
+    loadToolingData();
   }, []);
 
   if (entities.length === 0) return null;
