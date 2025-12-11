@@ -1,4 +1,3 @@
-
 export enum CommodityCategory {
   // Core
   RawSilicon = 'Raw Silicon & Wafers',

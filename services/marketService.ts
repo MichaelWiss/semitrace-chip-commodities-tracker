@@ -1,4 +1,3 @@
-
 import { Commodity, CommodityCategory, PricePoint, PowerHub, GlobalEnergyMetrics, PowerForecast, AvailabilityMetric, ToolingEntity, SupplyChainRisk, SectorDependencies, MaterialProperties, SupplyChainIndex, GeoRisk, RelatedCompany } from '../types';
 
 const API_KEY = import.meta.env.VITE_API_KEY || 'demo';

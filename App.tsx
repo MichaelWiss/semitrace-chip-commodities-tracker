@@ -1,14 +1,22 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { Ticker } from './components/Ticker';
 import { CommodityCard } from './components/CommodityCard';
-import { RiskMap } from './components/RiskMap';
-import { EnergyMonitor } from './components/EnergyMonitor';
-import { ToolingTracker } from './components/ToolingTracker';
 import { getCommodities, getSupplyChainIndices, getGeoRisks } from './services/marketService';
 import { Commodity, CommodityCategory, SupplyChainIndex, GeoRisk } from './types';
+
+// Lazy loaded components for performance
+const RiskMap = lazy(() => import('./components/RiskMap').then(m => ({ default: m.RiskMap })));
+const EnergyMonitor = lazy(() => import('./components/EnergyMonitor').then(m => ({ default: m.EnergyMonitor })));
+const ToolingTracker = lazy(() => import('./components/ToolingTracker').then(m => ({ default: m.ToolingTracker })));
+
+// Loading fallback component
+const SectionLoader: React.FC = () => (
+  <div className="h-96 bg-surface animate-pulse flex items-center justify-center">
+    <span className="font-mono text-xs text-secondary uppercase tracking-widest">Loading...</span>
+  </div>
+);
 
 // Simple Error Boundary
 interface ErrorBoundaryProps {
@@ -196,16 +204,22 @@ export default function App() {
 
           <div id="risk" className="bg-surface relative border-t border-text">
             <div className="max-w-[90vw] mx-auto">
-              <RiskMap />
+              <Suspense fallback={<SectionLoader />}>
+                <RiskMap />
+              </Suspense>
             </div>
           </div>
 
           <div id="energy">
-            <EnergyMonitor />
+            <Suspense fallback={<SectionLoader />}>
+              <EnergyMonitor />
+            </Suspense>
           </div>
 
           <div id="tooling">
-            <ToolingTracker />
+            <Suspense fallback={<SectionLoader />}>
+              <ToolingTracker />
+            </Suspense>
           </div>
         </main>
 

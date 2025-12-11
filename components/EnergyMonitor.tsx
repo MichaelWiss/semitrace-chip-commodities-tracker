@@ -1,14 +1,64 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { PowerHub, GlobalEnergyMetrics } from '../types';
 import { getPowerHubs, getEnergyMetrics } from '../services/marketService';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, Legend, Line, ComposedChart } from 'recharts';
 
+// Memoized hub selector item to prevent unnecessary re-renders
+interface HubSelectorItemProps {
+  hub: PowerHub;
+  isSelected: boolean;
+  onSelect: (hub: PowerHub) => void;
+}
+
+const HubSelectorItem = React.memo<HubSelectorItemProps>(({ hub, isSelected, onSelect }) => (
+  <div 
+    onClick={() => onSelect(hub)}
+    className={`
+      group p-6 cursor-pointer border-b border-text/10 transition-colors
+      ${isSelected ? 'bg-[#1A1918] text-[#F4F1EA]' : 'hover:bg-white'}
+    `}
+  >
+    <div className="flex justify-between items-center mb-2">
+      <span className="font-sans font-bold text-sm tracking-wide uppercase">{hub.name}</span>
+      <span className={`font-mono text-xs px-2 py-0.5 border rounded-full ${
+        isSelected ? 'border-white/30' : 'border-black/20'
+      }`}>
+        ${hub.spotPrice} / MWh
+      </span>
+    </div>
+    <div className="flex justify-between items-end">
+      <div className="flex flex-col">
+        <span className={`font-serif text-xs italic ${
+          isSelected ? 'text-white/60' : 'text-secondary'
+        }`}>
+          {hub.region}
+        </span>
+        <span className={`font-mono text-[9px] mt-1 uppercase ${
+          isSelected ? 'text-white/40' : 'text-secondary/60'
+        }`}>
+          RE: {hub.renewables.currentSolarLoad}% S | {hub.renewables.currentWindLoad}% W
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="font-mono text-[10px] uppercase">Strain:</span>
+        <div className={`w-2 h-2 rounded-full ${
+          hub.gridStrain === 'Critical' ? 'bg-accent animate-pulse' : 
+          hub.gridStrain === 'High' ? 'bg-orange-400' : 'bg-green-500'
+        }`}></div>
+      </div>
+    </div>
+  </div>
+));
+
 export const EnergyMonitor: React.FC = () => {
   const [hubs, setHubs] = useState<PowerHub[]>([]);
   const [metrics, setMetrics] = useState<GlobalEnergyMetrics | null>(null);
   const [selectedHub, setSelectedHub] = useState<PowerHub | null>(null);
+
+  const handleHubSelect = useCallback((hub: PowerHub) => {
+    setSelectedHub(hub);
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -23,12 +73,12 @@ export const EnergyMonitor: React.FC = () => {
 
   if (!metrics || !selectedHub) return null;
 
-  const mixData = [
+  const mixData = useMemo(() => [
     { name: 'Nuclear', value: selectedHub.energyMix.nuclear, color: '#EAE7E0' },
     { name: 'Gas', value: selectedHub.energyMix.gas, color: '#1A1918' },
     { name: 'Renewable', value: selectedHub.energyMix.renewables, color: '#D94E28' },
     { name: 'Coal', value: selectedHub.energyMix.coal, color: '#6B665F' },
-  ].filter(d => d.value > 0);
+  ].filter(d => d.value > 0), [selectedHub.energyMix]);
 
   // Analyze forecast to find peak renewable contribution
   const peakSolar = Math.max(...selectedHub.forecast.map(f => f.solar));
@@ -73,44 +123,12 @@ export const EnergyMonitor: React.FC = () => {
                     <span className="font-mono text-[10px] uppercase tracking-widest text-secondary">Data Center Hubs</span>
                 </div>
                 {hubs.map((hub) => (
-                    <div 
+                    <HubSelectorItem
                         key={hub.id}
-                        onClick={() => setSelectedHub(hub)}
-                        className={`
-                            group p-6 cursor-pointer border-b border-text/10 transition-colors
-                            ${selectedHub.id === hub.id ? 'bg-[#1A1918] text-[#F4F1EA]' : 'hover:bg-white'}
-                        `}
-                    >
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="font-sans font-bold text-sm tracking-wide uppercase">{hub.name}</span>
-                            <span className={`font-mono text-xs px-2 py-0.5 border rounded-full ${
-                                selectedHub.id === hub.id ? 'border-white/30' : 'border-black/20'
-                            }`}>
-                                ${hub.spotPrice} / MWh
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-end">
-                             <div className="flex flex-col">
-                                <span className={`font-serif text-xs italic ${
-                                    selectedHub.id === hub.id ? 'text-white/60' : 'text-secondary'
-                                }`}>
-                                    {hub.region}
-                                </span>
-                                <span className={`font-mono text-[9px] mt-1 uppercase ${
-                                    selectedHub.id === hub.id ? 'text-white/40' : 'text-secondary/60'
-                                }`}>
-                                    RE: {hub.renewables.currentSolarLoad}% S | {hub.renewables.currentWindLoad}% W
-                                </span>
-                             </div>
-                             <div className="flex items-center gap-2">
-                                 <span className="font-mono text-[10px] uppercase">Strain:</span>
-                                 <div className={`w-2 h-2 rounded-full ${
-                                     hub.gridStrain === 'Critical' ? 'bg-accent animate-pulse' : 
-                                     hub.gridStrain === 'High' ? 'bg-orange-400' : 'bg-green-500'
-                                 }`}></div>
-                             </div>
-                        </div>
-                    </div>
+                        hub={hub}
+                        isSelected={selectedHub.id === hub.id}
+                        onSelect={handleHubSelect}
+                    />
                 ))}
             </div>
 

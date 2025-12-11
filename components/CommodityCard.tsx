@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Commodity } from '../types';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, ComposedChart, Line, ReferenceArea, YAxis } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -38,15 +37,18 @@ const SectorTag: React.FC<{ name: string, criticality: 'High' | 'Medium' | 'Low'
   );
 };
 
-export const CommodityCard: React.FC<Props> = ({ data, index }) => {
+const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
   const [isHovered, setIsHovered] = useState(false);
   const isPositive = data.changePercentage >= 0;
 
   // Prepare data for the forecast chart including the range array
-  const forecastData = data.forecast?.map(f => ({
+  const forecastData = useMemo(
+    () => data.forecast?.map(f => ({
       ...f,
       range: [f.lowerBound, f.upperBound]
-  })) || [];
+    })) || [],
+    [data.forecast]
+  );
 
   const lastForecast = data.forecast?.[data.forecast.length - 1];
   const outlookStatus = lastForecast?.status || 'Unknown';
@@ -382,3 +384,5 @@ export const CommodityCard: React.FC<Props> = ({ data, index }) => {
     </motion.div>
   );
 };
+
+export const CommodityCard = React.memo(CommodityCardComponent);
