@@ -60,6 +60,17 @@ export const EnergyMonitor: React.FC = () => {
     setSelectedHub(hub);
   }, []);
 
+  // Memoize mixData - must be before any conditional returns
+  const mixData = useMemo(() => {
+    if (!selectedHub) return [];
+    return [
+      { name: 'Nuclear', value: selectedHub.energyMix.nuclear, color: '#EAE7E0' },
+      { name: 'Gas', value: selectedHub.energyMix.gas, color: '#1A1918' },
+      { name: 'Renewable', value: selectedHub.energyMix.renewables, color: '#D94E28' },
+      { name: 'Coal', value: selectedHub.energyMix.coal, color: '#6B665F' },
+    ].filter(d => d.value > 0);
+  }, [selectedHub]);
+
   useEffect(() => {
     const load = async () => {
       const h = await getPowerHubs();
@@ -72,13 +83,6 @@ export const EnergyMonitor: React.FC = () => {
   }, []);
 
   if (!metrics || !selectedHub) return null;
-
-  const mixData = useMemo(() => [
-    { name: 'Nuclear', value: selectedHub.energyMix.nuclear, color: '#EAE7E0' },
-    { name: 'Gas', value: selectedHub.energyMix.gas, color: '#1A1918' },
-    { name: 'Renewable', value: selectedHub.energyMix.renewables, color: '#D94E28' },
-    { name: 'Coal', value: selectedHub.energyMix.coal, color: '#6B665F' },
-  ].filter(d => d.value > 0), [selectedHub.energyMix]);
 
   // Analyze forecast to find peak renewable contribution
   const peakSolar = Math.max(...selectedHub.forecast.map(f => f.solar));
