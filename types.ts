@@ -1,9 +1,33 @@
 
 export enum CommodityCategory {
+  // Core
   RawSilicon = 'Raw Silicon & Wafers',
   CriticalMetals = 'Critical Metals',
-  PreciousMetals = 'Precious & Rare',
-  Chemicals = 'Specialty Chemicals',
+  PreciousMetals = 'Precious Metals',
+  PlatinumGroup = 'Platinum Group Metals',
+  
+  // Elements
+  RareEarths = 'Rare Earth Elements',
+  SemiconductorElements = 'Semiconductor Elements',
+  Dopants = 'Dopants & Trace Elements',
+  
+  // Energy
+  BatteryMaterials = 'Battery & Energy Storage',
+  HydrogenEconomy = 'Hydrogen Economy',
+  SolarMaterials = 'Solar PV Materials',
+  
+  // Process
+  IndustrialGases = 'Industrial & Process Gases',
+  SpecialtyChemicals = 'Specialty Chemicals',
+  ALDPrecursors = 'ALD/CVD Precursors',
+  
+  // Advanced
+  SuperconductorMaterials = 'Superconductor Materials',
+  QuantumMaterials = 'Quantum Computing Materials',
+  AdvancedMaterials = 'Advanced & Emerging Materials',
+  
+  // Infrastructure
+  PackagingMaterials = 'Packaging & Substrates'
 }
 
 export interface PricePoint {
@@ -19,9 +43,75 @@ export interface AvailabilityMetric {
   upperBound: number; // Confidence interval upper
 }
 
+export interface SupplyChainRisk {
+  primaryProducerShare: number;      // % from top producer
+  top3ProducerShare: number;         // % from top 3
+  exportControlled: boolean;          // Subject to restrictions
+  substitutability: 'None' | 'Limited' | 'Moderate' | 'High';
+  recyclingRate: number;              // % currently recycled
+  stockpileDays: number;              // Strategic reserve days
+}
+
+export interface SectorDependencies {
+  semiconductors: boolean;
+  cleanEnergy: boolean;
+  batteries: boolean;
+  superconductors: boolean;
+  quantumComputing: boolean;
+  aiInfrastructure: boolean;
+}
+
+export interface MaterialProperties {
+  purityGrade?: string;               // "9N", "5N", "4N5"
+  form: string;                        // "Ingot", "Powder", "Gas", "Tape"
+  criticalProcesses: string[];
+  alternativeMaterials: string[];
+}
+
+export interface PriceReferences {
+  exchange?: string;                  // "LME", "COMEX", "SMM"
+  symbol?: string;                    // "HG=F", "LCO"
+  spotMarket?: string;                // "Asian Metals", "Minor Metals"
+}
+
+export interface ESGMetrics {
+  waterIntensity?: number; // Liters/kg
+  carbonFootprint?: number; // kg CO2e across lifecycle
+  communityImpactScore?: number; // 0-100
+  circularityPercentage?: number; // % from recycled sources
+  conflictMineralStatus?: boolean; // 3TG compliance
+}
+
+export interface GeographicConcentration {
+  material: string;
+  production: { country: string; share: number }[];
+  refining: { country: string; share: number }[];
+  chokepoints: string[];               // "Taiwan Strait", "Malacca Strait"
+  logisticsRisk: 'Low' | 'Medium' | 'High' | 'Critical';
+}
+
+export interface SupplyChainIndex {
+  id: string;
+  name: string;
+  value: number;
+  change: number;
+  unit: string;
+  description: string;
+  dataSource: string;
+}
+
 export interface CommodityUsage {
   processes: string[]; // e.g., "Wire Bonding", "Sputtering"
   layers: string[];    // e.g., "Interconnects", "Packaging"
+}
+
+export interface RelatedCompany {
+  symbol: string;       // Stock ticker (e.g., "FCX", "ALB")
+  name: string;         // Full company name
+  exchange: string;     // NYSE, NASDAQ, etc.
+  role: 'Producer' | 'Processor' | 'Supplier' | 'Consumer' | 'Recycler';
+  marketCap?: string;   // e.g., "$45B"
+  description: string;  // Brief description of relationship to material
 }
 
 export interface Commodity {
@@ -41,6 +131,15 @@ export interface Commodity {
   forecast: AvailabilityMetric[];
   forecastConfidence: number; // % confidence in prediction
   usage: CommodityUsage;
+  
+  // New Fields
+  supplyChainRisk?: SupplyChainRisk;
+  sectorDependencies?: SectorDependencies;
+  materialProperties?: MaterialProperties;
+  priceReferences?: PriceReferences;
+  esgMetrics?: ESGMetrics;
+  geographicConcentration?: GeographicConcentration;
+  relatedCompanies?: RelatedCompany[];
 }
 
 export interface MarketTicker {
@@ -54,6 +153,16 @@ export interface GeoRisk {
   riskScore: number; // 0-100
   controlledMaterials: string[];
   description: string;
+}
+
+export interface RiskAlert {
+  id: string;
+  severity: 'critical' | 'warning' | 'info';
+  title: string;
+  message: string;
+  affectedMaterials: string[];
+  timestamp: string;
+  category: 'geopolitical' | 'supply' | 'price' | 'logistics';
 }
 
 // New Types for Energy Module
