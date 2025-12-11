@@ -7,7 +7,6 @@ import { CommodityCard } from './components/CommodityCard';
 import { RiskMap } from './components/RiskMap';
 import { EnergyMonitor } from './components/EnergyMonitor';
 import { ToolingTracker } from './components/ToolingTracker';
-import { RiskAlertPanel } from './components/RiskAlertPanel';
 import { getCommodities, getSupplyChainIndices, getGeoRisks } from './services/marketService';
 import { Commodity, CommodityCategory, SupplyChainIndex, GeoRisk } from './types';
 
@@ -83,9 +82,6 @@ export default function App() {
     <ErrorBoundary>
       <div className="bg-background text-text selection:bg-accent selection:text-white min-h-screen flex flex-col">
         <Navigation />
-        
-        {/* Global Risk Alert Panel */}
-        <RiskAlertPanel />
         
         <main className="relative flex-grow">
           <Hero />

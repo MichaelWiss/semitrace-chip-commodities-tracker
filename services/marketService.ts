@@ -631,6 +631,285 @@ const ADVANCED_MATERIALS: CommodityDefinition[] = [
   }
 ];
 
+// ============== MISSING CATEGORIES ==============
+
+const DOPANTS: CommodityDefinition[] = [
+  {
+    id: 'boron', name: 'Boron', category: CommodityCategory.Dopants,
+    desc: 'P-type dopant for silicon.', producer: 'Turkey', symbol: 'B', price: 3.5, risk: 'Elevated',
+    processes: ['Ion Implantation', 'Diffusion'], layers: ['Active'],
+    supplyChainRisk: { primaryProducerShare: 70, top3ProducerShare: 90, exportControlled: false, substitutability: 'None', recyclingRate: 0, stockpileDays: 60 },
+    sectorDependencies: { semiconductors: true, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: true },
+    materialProperties: { purityGrade: '6N', form: 'Gas (B2H6)', criticalProcesses: ['Implantation'], alternativeMaterials: ['Aluminum'] },
+    companies: [
+      { symbol: 'ETI.IS', name: 'Eti Maden', exchange: 'BIST', role: 'Producer', marketCap: '$5B', description: 'Turkish state company, 70% of global boron reserves.' },
+      { symbol: 'ENTG', name: 'Entegris', exchange: 'NASDAQ', role: 'Supplier', marketCap: '$18B', description: 'Ultra-pure diborane (B2H6) for ion implantation.' },
+      { symbol: 'AMAT', name: 'Applied Materials', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$150B', description: 'Ion implantation equipment manufacturer.' }
+    ]
+  },
+  {
+    id: 'phosphorus', name: 'Phosphorus', category: CommodityCategory.Dopants,
+    desc: 'N-type dopant for silicon.', producer: 'China', symbol: 'P', price: 2.8, risk: 'Elevated',
+    processes: ['Ion Implantation', 'Diffusion'], layers: ['Active'],
+    supplyChainRisk: { primaryProducerShare: 60, top3ProducerShare: 85, exportControlled: false, substitutability: 'None', recyclingRate: 0, stockpileDays: 45 },
+    sectorDependencies: { semiconductors: true, cleanEnergy: true, batteries: true, superconductors: false, quantumComputing: false, aiInfrastructure: true },
+    materialProperties: { purityGrade: '6N', form: 'Gas (PH3)', criticalProcesses: ['Implantation'], alternativeMaterials: ['Arsenic'] },
+    companies: [
+      { symbol: 'VNTR', name: 'Venator Materials', exchange: 'NYSE', role: 'Producer', marketCap: '$200M', description: 'Specialty phosphorus compounds.' },
+      { symbol: 'AXTA', name: 'Axalta', exchange: 'NYSE', role: 'Supplier', marketCap: '$8B', description: 'Electronic-grade phosphine supplier.' },
+      { symbol: 'TSM', name: 'TSMC', exchange: 'NYSE', role: 'Consumer', marketCap: '$700B', description: 'Major consumer for n-type doping in advanced nodes.' }
+    ]
+  },
+  {
+    id: 'arsenic', name: 'Arsenic', category: CommodityCategory.Dopants,
+    desc: 'N-type dopant, III-V compounds.', producer: 'China', symbol: 'AS', price: 1.5, risk: 'Critical',
+    processes: ['Ion Implantation', 'MBE'], layers: ['Active'],
+    supplyChainRisk: { primaryProducerShare: 70, top3ProducerShare: 90, exportControlled: true, substitutability: 'Limited', recyclingRate: 5, stockpileDays: 30 },
+    sectorDependencies: { semiconductors: true, cleanEnergy: false, batteries: false, superconductors: false, quantumComputing: true, aiInfrastructure: false },
+    materialProperties: { purityGrade: '7N', form: 'Gas (AsH3)', criticalProcesses: ['Epitaxy'], alternativeMaterials: ['Phosphorus'] },
+    companies: [
+      { symbol: 'UMC.TW', name: 'Umicore', exchange: 'ENXT', role: 'Producer', marketCap: '$10B', description: 'Semiconductor-grade arsenic compounds.' },
+      { symbol: 'IIVI', name: 'Coherent', exchange: 'NYSE', role: 'Consumer', marketCap: '$7B', description: 'GaAs laser and photonics manufacturing.' },
+      { symbol: 'SWKS', name: 'Skyworks', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$15B', description: 'GaAs RF components for 5G.' }
+    ]
+  },
+  {
+    id: 'antimony', name: 'Antimony', category: CommodityCategory.Dopants,
+    desc: 'N-type dopant, thermoelectrics.', producer: 'China', symbol: 'SB', price: 12, risk: 'Critical',
+    processes: ['Alloying', 'Implantation'], layers: ['Active'],
+    supplyChainRisk: { primaryProducerShare: 80, top3ProducerShare: 95, exportControlled: true, substitutability: 'Limited', recyclingRate: 20, stockpileDays: 45 },
+    sectorDependencies: { semiconductors: true, cleanEnergy: false, batteries: true, superconductors: false, quantumComputing: false, aiInfrastructure: false },
+    materialProperties: { purityGrade: '5N', form: 'Metal', criticalProcesses: ['Refining'], alternativeMaterials: [] },
+    companies: [
+      { symbol: 'HUNAN', name: 'Hunan Antimony', exchange: 'SZSE', role: 'Producer', marketCap: '$1B', description: 'Chinese antimony leader, 50% global supply.' },
+      { symbol: 'USAS', name: 'Americas Gold and Silver', exchange: 'NYSE', role: 'Producer', marketCap: '$200M', description: 'North American antimony producer.' },
+      { symbol: 'II-VI', name: 'Coherent', exchange: 'NYSE', role: 'Consumer', marketCap: '$7B', description: 'Thermoelectric materials manufacturing.' }
+    ]
+  }
+];
+
+const HYDROGEN_ECONOMY: CommodityDefinition[] = [
+  {
+    id: 'green_hydrogen', name: 'Green Hydrogen', category: CommodityCategory.HydrogenEconomy,
+    desc: 'Electrolysis-produced H2.', producer: 'Global', symbol: 'H2-G', price: 5, risk: 'Elevated',
+    processes: ['Electrolysis'], layers: ['Fuel'],
+    supplyChainRisk: { primaryProducerShare: 20, top3ProducerShare: 50, exportControlled: false, substitutability: 'None', recyclingRate: 0, stockpileDays: 3 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: false },
+    materialProperties: { purityGrade: '5N', form: 'Gas', criticalProcesses: ['Electrolysis'], alternativeMaterials: [] },
+    companies: [
+      { symbol: 'PLUG', name: 'Plug Power', exchange: 'NASDAQ', role: 'Producer', marketCap: '$5B', description: 'Green hydrogen production and fuel cells.' },
+      { symbol: 'BE', name: 'Bloom Energy', exchange: 'NYSE', role: 'Producer', marketCap: '$3B', description: 'Solid oxide electrolyzer technology.' },
+      { symbol: 'NEL.OL', name: 'Nel ASA', exchange: 'OSE', role: 'Producer', marketCap: '$2B', description: 'Norwegian electrolyzer manufacturer.' },
+      { symbol: 'APD', name: 'Air Products', exchange: 'NYSE', role: 'Supplier', marketCap: '$65B', description: 'Hydrogen infrastructure and distribution.' }
+    ]
+  },
+  {
+    id: 'pem_membrane', name: 'PEM Membrane', category: CommodityCategory.HydrogenEconomy,
+    desc: 'Proton exchange membrane.', producer: 'USA', symbol: 'PEM', price: 800, risk: 'Critical',
+    processes: ['Extrusion'], layers: ['Membrane'],
+    supplyChainRisk: { primaryProducerShare: 60, top3ProducerShare: 90, exportControlled: false, substitutability: 'None', recyclingRate: 10, stockpileDays: 20 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: false },
+    materialProperties: { purityGrade: 'N/A', form: 'Film', criticalProcesses: ['Fluorination'], alternativeMaterials: [] },
+    companies: [
+      { symbol: 'CHMA', name: 'Chemours (Nafion)', exchange: 'NYSE', role: 'Producer', marketCap: '$5B', description: 'Nafion PEM membrane monopoly holder.' },
+      { symbol: 'W.L.GF', name: 'W.L. Gore', exchange: 'Private', role: 'Producer', marketCap: '$5B', description: 'Gore-Select membrane technology.' },
+      { symbol: 'BLDP', name: 'Ballard Power', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$1B', description: 'Fuel cell manufacturer, PEM consumer.' }
+    ]
+  },
+  {
+    id: 'catalyst_platinum_h2', name: 'Platinum Catalyst', category: CommodityCategory.HydrogenEconomy,
+    desc: 'Fuel cell catalyst.', producer: 'South Africa', symbol: 'PT-CAT', price: 35000, risk: 'Critical',
+    processes: ['Coating'], layers: ['Catalyst'],
+    supplyChainRisk: { primaryProducerShare: 70, top3ProducerShare: 90, exportControlled: false, substitutability: 'Limited', recyclingRate: 50, stockpileDays: 30 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: false },
+    materialProperties: { purityGrade: '4N', form: 'Nanoparticle', criticalProcesses: ['Coating'], alternativeMaterials: ['Iridium'] },
+    companies: [
+      { symbol: 'JM.L', name: 'Johnson Matthey', exchange: 'LSE', role: 'Producer', marketCap: '$5B', description: 'Global leader in fuel cell catalysts.' },
+      { symbol: 'BASFY', name: 'BASF', exchange: 'OTCMKTS', role: 'Producer', marketCap: '$45B', description: 'Catalyst technology for hydrogen applications.' },
+      { symbol: 'HYLN', name: 'Hyliion', exchange: 'NYSE', role: 'Consumer', marketCap: '$500M', description: 'Hydrogen fuel cell trucks.' }
+    ]
+  },
+  {
+    id: 'carbon_fiber_h2', name: 'Carbon Fiber (H2 Tanks)', category: CommodityCategory.HydrogenEconomy,
+    desc: 'Type IV hydrogen storage tanks.', producer: 'Japan', symbol: 'CF-H2', price: 25, risk: 'Elevated',
+    processes: ['Winding'], layers: ['Tank'],
+    supplyChainRisk: { primaryProducerShare: 50, top3ProducerShare: 85, exportControlled: false, substitutability: 'None', recyclingRate: 5, stockpileDays: 30 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: false },
+    materialProperties: { purityGrade: 'Aerospace', form: 'Fiber', criticalProcesses: ['Weaving'], alternativeMaterials: [] },
+    companies: [
+      { symbol: '3407.T', name: 'Toray Industries', exchange: 'TSE', role: 'Producer', marketCap: '$15B', description: 'World largest carbon fiber producer.' },
+      { symbol: 'HEXC', name: 'Hexcel', exchange: 'NYSE', role: 'Producer', marketCap: '$6B', description: 'Aerospace-grade carbon fiber composites.' },
+      { symbol: 'TM', name: 'Toyota', exchange: 'NYSE', role: 'Consumer', marketCap: '$250B', description: 'Mirai hydrogen fuel cell vehicle manufacturer.' }
+    ]
+  }
+];
+
+const SOLAR_MATERIALS: CommodityDefinition[] = [
+  {
+    id: 'solar_grade_silicon', name: 'Solar-Grade Silicon', category: CommodityCategory.SolarMaterials,
+    desc: '6N-7N polysilicon for PV.', producer: 'China', symbol: 'SI-SOL', price: 8, risk: 'Stable',
+    processes: ['Siemens Process'], layers: ['Wafer'],
+    supplyChainRisk: { primaryProducerShare: 80, top3ProducerShare: 95, exportControlled: false, substitutability: 'None', recyclingRate: 10, stockpileDays: 45 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: false },
+    materialProperties: { purityGrade: '7N', form: 'Chunk', criticalProcesses: ['Purification'], alternativeMaterials: [] },
+    companies: [
+      { symbol: 'GCL', name: 'GCL-Poly', exchange: 'HKEX', role: 'Producer', marketCap: '$8B', description: 'Chinese polysilicon giant, granular technology.' },
+      { symbol: 'DAQO', name: 'Daqo New Energy', exchange: 'NYSE', role: 'Producer', marketCap: '$2B', description: 'High-purity polysilicon producer.' },
+      { symbol: 'WCH.DE', name: 'Wacker Chemie', exchange: 'XETRA', role: 'Producer', marketCap: '$10B', description: 'German polysilicon, non-China alternative.' },
+      { symbol: 'FSLR', name: 'First Solar', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$20B', description: 'US solar panel manufacturer.' }
+    ]
+  },
+  {
+    id: 'silver_paste', name: 'Silver Paste', category: CommodityCategory.SolarMaterials,
+    desc: 'Front contact metallization.', producer: 'Japan', symbol: 'AG-PST', price: 900, risk: 'Elevated',
+    processes: ['Screen Printing'], layers: ['Contact'],
+    supplyChainRisk: { primaryProducerShare: 40, top3ProducerShare: 75, exportControlled: false, substitutability: 'Limited', recyclingRate: 30, stockpileDays: 20 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: false },
+    materialProperties: { purityGrade: '4N', form: 'Paste', criticalProcesses: ['Sintering'], alternativeMaterials: ['Copper'] },
+    companies: [
+      { symbol: 'HXSCL', name: 'Heraeus', exchange: 'Private', role: 'Producer', marketCap: '$30B', description: 'Market leader in solar silver paste.' },
+      { symbol: 'DUPNT', name: 'DuPont', exchange: 'NYSE', role: 'Producer', marketCap: '$35B', description: 'Solamet silver paste product line.' },
+      { symbol: 'JKS', name: 'JinkoSolar', exchange: 'NYSE', role: 'Consumer', marketCap: '$2B', description: 'World largest solar panel producer.' }
+    ]
+  },
+  {
+    id: 'eva_encapsulant', name: 'EVA Encapsulant', category: CommodityCategory.SolarMaterials,
+    desc: 'Solar cell protection film.', producer: 'China', symbol: 'EVA', price: 2.5, risk: 'Stable',
+    processes: ['Lamination'], layers: ['Encapsulant'],
+    supplyChainRisk: { primaryProducerShare: 60, top3ProducerShare: 80, exportControlled: false, substitutability: 'Moderate', recyclingRate: 5, stockpileDays: 30 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: false },
+    materialProperties: { purityGrade: 'Solar', form: 'Film', criticalProcesses: ['Extrusion'], alternativeMaterials: ['POE'] },
+    companies: [
+      { symbol: '601138.SS', name: 'Hangzhou First', exchange: 'SSE', role: 'Producer', marketCap: '$5B', description: 'Chinese EVA film leader.' },
+      { symbol: 'STLD', name: 'STR Holdings', exchange: 'Private', role: 'Producer', marketCap: '$500M', description: 'Solar encapsulant specialist.' },
+      { symbol: 'CSIQ', name: 'Canadian Solar', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$2B', description: 'Major module manufacturer.' }
+    ]
+  },
+  {
+    id: 'perovskite_precursor', name: 'Perovskite Precursor', category: CommodityCategory.SolarMaterials,
+    desc: 'Lead halide perovskite materials.', producer: 'Global', symbol: 'PROV', price: 500, risk: 'Elevated',
+    processes: ['Deposition'], layers: ['Absorber'],
+    supplyChainRisk: { primaryProducerShare: 30, top3ProducerShare: 60, exportControlled: false, substitutability: 'None', recyclingRate: 0, stockpileDays: 10 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: false },
+    materialProperties: { purityGrade: '4N', form: 'Powder', criticalProcesses: ['Synthesis'], alternativeMaterials: [] },
+    companies: [
+      { symbol: 'OXFDY', name: 'Oxford PV', exchange: 'Private', role: 'Producer', marketCap: '$500M', description: 'Perovskite-silicon tandem leader.' },
+      { symbol: 'ENPH', name: 'Enphase Energy', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$25B', description: 'Evaluating perovskite integration.' },
+      { symbol: 'SEDG', name: 'SolarEdge', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$5B', description: 'Solar inverter technology.' }
+    ]
+  }
+];
+
+const ALD_PRECURSORS: CommodityDefinition[] = [
+  {
+    id: 'tma', name: 'Trimethylaluminum (TMA)', category: CommodityCategory.ALDPrecursors,
+    desc: 'Al2O3 ALD precursor.', producer: 'USA', symbol: 'TMA', price: 250, risk: 'Elevated',
+    processes: ['ALD'], layers: ['Gate Oxide', 'Passivation'],
+    supplyChainRisk: { primaryProducerShare: 40, top3ProducerShare: 80, exportControlled: false, substitutability: 'None', recyclingRate: 0, stockpileDays: 15 },
+    sectorDependencies: { semiconductors: true, cleanEnergy: true, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: true },
+    materialProperties: { purityGrade: '6N', form: 'Liquid', criticalProcesses: ['Synthesis'], alternativeMaterials: [] },
+    companies: [
+      { symbol: 'VRS', name: 'Versum Materials', exchange: 'Acquired', role: 'Producer', marketCap: 'N/A', description: 'Acquired by Merck KGaA, TMA leader.' },
+      { symbol: 'MKKGY', name: 'Merck KGaA', exchange: 'OTCMKTS', role: 'Producer', marketCap: '$60B', description: 'Global leader in ALD precursors.' },
+      { symbol: 'LRCX', name: 'Lam Research', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$100B', description: 'ALD equipment manufacturer.' }
+    ]
+  },
+  {
+    id: 'tdmat', name: 'TDMAT', category: CommodityCategory.ALDPrecursors,
+    desc: 'TiN ALD precursor.', producer: 'Japan', symbol: 'TDMAT', price: 400, risk: 'Critical',
+    processes: ['ALD'], layers: ['Barrier', 'Electrode'],
+    supplyChainRisk: { primaryProducerShare: 50, top3ProducerShare: 85, exportControlled: true, substitutability: 'None', recyclingRate: 0, stockpileDays: 10 },
+    sectorDependencies: { semiconductors: true, cleanEnergy: false, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: true },
+    materialProperties: { purityGrade: '5N', form: 'Liquid', criticalProcesses: ['Purification'], alternativeMaterials: ['TEMAT'] },
+    companies: [
+      { symbol: 'STREM', name: 'Strem Chemicals', exchange: 'Private', role: 'Producer', marketCap: '$100M', description: 'Specialty organometallic precursors.' },
+      { symbol: '4063.T', name: 'Shin-Etsu Chemical', exchange: 'TSE', role: 'Producer', marketCap: '$80B', description: 'Japanese electronic materials giant.' },
+      { symbol: 'INTC', name: 'Intel', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$200B', description: 'Advanced node ALD processes.' }
+    ]
+  },
+  {
+    id: 'temaz', name: 'TEMAZ', category: CommodityCategory.ALDPrecursors,
+    desc: 'ZrO2 high-k ALD precursor.', producer: 'USA', symbol: 'TEMAZ', price: 600, risk: 'Critical',
+    processes: ['ALD'], layers: ['Gate Oxide'],
+    supplyChainRisk: { primaryProducerShare: 45, top3ProducerShare: 80, exportControlled: true, substitutability: 'Limited', recyclingRate: 0, stockpileDays: 10 },
+    sectorDependencies: { semiconductors: true, cleanEnergy: false, batteries: false, superconductors: false, quantumComputing: true, aiInfrastructure: true },
+    materialProperties: { purityGrade: '5N', form: 'Liquid', criticalProcesses: ['Synthesis'], alternativeMaterials: ['TDMAZ'] },
+    companies: [
+      { symbol: 'MKKGY', name: 'Merck KGaA', exchange: 'OTCMKTS', role: 'Producer', marketCap: '$60B', description: 'High-k dielectric precursor supplier.' },
+      { symbol: 'AMSC', name: 'Air Liquide', exchange: 'ENXT', role: 'Producer', marketCap: '$90B', description: 'Electronic specialty gases and precursors.' },
+      { symbol: 'TSM', name: 'TSMC', exchange: 'NYSE', role: 'Consumer', marketCap: '$700B', description: 'High-k metal gate process leader.' }
+    ]
+  },
+  {
+    id: 'ru_precursor', name: 'Ruthenium Precursor', category: CommodityCategory.ALDPrecursors,
+    desc: 'Ru interconnect ALD.', producer: 'Belgium', symbol: 'RU-ALD', price: 2000, risk: 'Critical',
+    processes: ['ALD'], layers: ['Interconnects'],
+    supplyChainRisk: { primaryProducerShare: 60, top3ProducerShare: 90, exportControlled: true, substitutability: 'None', recyclingRate: 0, stockpileDays: 10 },
+    sectorDependencies: { semiconductors: true, cleanEnergy: false, batteries: false, superconductors: false, quantumComputing: false, aiInfrastructure: true },
+    materialProperties: { purityGrade: '5N', form: 'Liquid', criticalProcesses: ['Synthesis'], alternativeMaterials: [] },
+    companies: [
+      { symbol: 'JM.L', name: 'Johnson Matthey', exchange: 'LSE', role: 'Producer', marketCap: '$5B', description: 'PGM precursor synthesis.' },
+      { symbol: 'UMC.BB', name: 'Umicore', exchange: 'ENXT', role: 'Producer', marketCap: '$10B', description: 'Ruthenium precursor development.' },
+      { symbol: 'INTC', name: 'Intel', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$200B', description: 'Ruthenium interconnect R&D for sub-2nm.' }
+    ]
+  }
+];
+
+const QUANTUM_MATERIALS: CommodityDefinition[] = [
+  {
+    id: 'dilution_fridge_he3', name: 'Helium-3', category: CommodityCategory.QuantumMaterials,
+    desc: 'Dilution refrigerator coolant.', producer: 'USA', symbol: 'HE3', price: 2000, risk: 'Critical',
+    processes: ['Dilution'], layers: ['Cooling'],
+    supplyChainRisk: { primaryProducerShare: 80, top3ProducerShare: 95, exportControlled: true, substitutability: 'None', recyclingRate: 90, stockpileDays: 60 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: false, batteries: false, superconductors: true, quantumComputing: true, aiInfrastructure: false },
+    materialProperties: { purityGrade: '5N', form: 'Gas', criticalProcesses: ['Tritium Decay'], alternativeMaterials: [] },
+    companies: [
+      { symbol: 'DOE', name: 'US DOE', exchange: 'Government', role: 'Producer', marketCap: 'N/A', description: 'Primary global He-3 source from tritium decay.' },
+      { symbol: 'BLDR', name: 'Bluefors', exchange: 'Private', role: 'Consumer', marketCap: '$500M', description: 'Dilution refrigerator manufacturer.' },
+      { symbol: 'IBM', name: 'IBM', exchange: 'NYSE', role: 'Consumer', marketCap: '$150B', description: 'Quantum computer systems require mK cooling.' }
+    ]
+  },
+  {
+    id: 'josephson_junction', name: 'Josephson Junction Material', category: CommodityCategory.QuantumMaterials,
+    desc: 'Al/AlOx/Al superconducting junctions.', producer: 'USA', symbol: 'JJ', price: 5000, risk: 'Critical',
+    processes: ['Shadow Evaporation'], layers: ['Qubit'],
+    supplyChainRisk: { primaryProducerShare: 50, top3ProducerShare: 85, exportControlled: true, substitutability: 'None', recyclingRate: 0, stockpileDays: 10 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: false, batteries: false, superconductors: true, quantumComputing: true, aiInfrastructure: false },
+    materialProperties: { purityGrade: '6N', form: 'Thin Film', criticalProcesses: ['Oxidation'], alternativeMaterials: [] },
+    companies: [
+      { symbol: 'GOOG', name: 'Alphabet (Google Quantum)', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$2T', description: 'Sycamore quantum processor development.' },
+      { symbol: 'IBM', name: 'IBM', exchange: 'NYSE', role: 'Consumer', marketCap: '$150B', description: 'Transmon qubit manufacturing.' },
+      { symbol: 'RIGR', name: 'Rigetti Computing', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$200M', description: 'Superconducting qubit systems.' }
+    ]
+  },
+  {
+    id: 'trapped_ion_ytterbium', name: 'Ytterbium Ions', category: CommodityCategory.QuantumMaterials,
+    desc: 'Trapped ion qubit atoms.', producer: 'China', symbol: 'YB', price: 1500, risk: 'Critical',
+    processes: ['Purification'], layers: ['Qubit'],
+    supplyChainRisk: { primaryProducerShare: 90, top3ProducerShare: 98, exportControlled: true, substitutability: 'Limited', recyclingRate: 0, stockpileDays: 30 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: false, batteries: false, superconductors: false, quantumComputing: true, aiInfrastructure: false },
+    materialProperties: { purityGrade: '5N', form: 'Metal', criticalProcesses: ['Separation'], alternativeMaterials: ['Barium', 'Calcium'] },
+    companies: [
+      { symbol: 'IONQ', name: 'IonQ', exchange: 'NYSE', role: 'Consumer', marketCap: '$3B', description: 'Trapped ion quantum computer leader.' },
+      { symbol: 'QNCC', name: 'Quantinuum', exchange: 'Private', role: 'Consumer', marketCap: '$5B', description: 'Honeywell quantum spin-off, Yb ions.' },
+      { symbol: '600111.SS', name: 'Northern Rare Earth', exchange: 'SSE', role: 'Producer', marketCap: '$15B', description: 'Ytterbium separation from rare earths.' }
+    ]
+  },
+  {
+    id: 'diamond_nv_center', name: 'NV Diamond', category: CommodityCategory.QuantumMaterials,
+    desc: 'Nitrogen-vacancy diamond qubits.', producer: 'USA', symbol: 'NV-D', price: 10000, risk: 'Elevated',
+    processes: ['CVD Growth', 'Implantation'], layers: ['Qubit'],
+    supplyChainRisk: { primaryProducerShare: 40, top3ProducerShare: 70, exportControlled: false, substitutability: 'None', recyclingRate: 0, stockpileDays: 20 },
+    sectorDependencies: { semiconductors: false, cleanEnergy: false, batteries: false, superconductors: false, quantumComputing: true, aiInfrastructure: false },
+    materialProperties: { purityGrade: 'Electronic', form: 'Crystal', criticalProcesses: ['Ion Implantation'], alternativeMaterials: ['SiC'] },
+    companies: [
+      { symbol: 'ELMS', name: 'Element Six', exchange: 'Private', role: 'Producer', marketCap: '$1B', description: 'De Beers synthetic diamond division.' },
+      { symbol: 'QBTS', name: 'D-Wave Quantum', exchange: 'NYSE', role: 'Consumer', marketCap: '$300M', description: 'Exploring diamond NV sensors.' },
+      { symbol: 'QSI', name: 'Quantum-Si', exchange: 'NASDAQ', role: 'Consumer', marketCap: '$500M', description: 'Quantum sensing applications.' }
+    ]
+  }
+];
+
 const ALL_COMMODITIES = [
   ...RAW_SILICON,
   ...CRITICAL_METALS,
@@ -643,7 +922,12 @@ const ALL_COMMODITIES = [
   ...INDUSTRIAL_GASES,
   ...SPECIALTY_CHEMICALS,
   ...PACKAGING_MATERIALS,
-  ...ADVANCED_MATERIALS
+  ...ADVANCED_MATERIALS,
+  ...DOPANTS,
+  ...HYDROGEN_ECONOMY,
+  ...SOLAR_MATERIALS,
+  ...ALD_PRECURSORS,
+  ...QUANTUM_MATERIALS
 ];
 
 // Robust simulation for fallback

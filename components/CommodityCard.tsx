@@ -24,7 +24,7 @@ const RiskBar = ({ label, value }: { label: string, value: number }) => (
   </div>
 );
 
-const SectorTag = ({ name, criticality }: { name: string, criticality: 'High' | 'Medium' | 'Low' }) => {
+const SectorTag: React.FC<{ name: string, criticality: 'High' | 'Medium' | 'Low' }> = ({ name, criticality }) => {
   const colors = {
     High: 'bg-[#D94E28] text-white border-[#D94E28]',
     Medium: 'bg-surface text-text border-text',
@@ -175,9 +175,11 @@ export const CommodityCard: React.FC<Props> = ({ data, index }) => {
                      <div>
                         <h4 className="font-sans font-bold text-xs uppercase tracking-widest mb-4 text-accent">Critical Sectors</h4>
                         <div className="flex flex-wrap">
-                          {Object.entries(data.sectorDependencies).map(([sector, criticality]) => (
-                            <SectorTag key={sector} name={sector} criticality={criticality as any} />
-                          ))}
+                          {Object.entries(data.sectorDependencies)
+                            .filter(([_, isDependent]) => isDependent)
+                            .map(([sector]) => (
+                              <SectorTag key={sector} name={sector} criticality="High" />
+                            ))}
                         </div>
                      </div>
                    )}
