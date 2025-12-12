@@ -1,4 +1,4 @@
-import { Commodity, CommodityCategory, PricePoint, AvailabilityMetric, SupplyChainRisk, SectorDependencies, MaterialProperties, SupplyChainIndex, GeoRisk, RelatedCompany } from '../types';
+import { Commodity, CommodityCategory, PricePoint, AvailabilityMetric, SupplyChainRisk, SectorDependencies, MaterialProperties, SupplyChainIndex, GeoRisk, RelatedCompany, RiskAlert } from '../types';
 import { CONFIG } from '../constants/config';
 
 // Commodities to fetch with their API function mapping
@@ -1057,15 +1057,7 @@ export const getCommodities = async (): Promise<Commodity[]> => {
   return commodities;
 };
 
-interface RiskAlert {
-  id: string;
-  severity: 'critical' | 'warning' | 'info';
-  title: string;
-  message: string;
-  affectedMaterials: string[];
-  timestamp: string;
-  category: 'geopolitical' | 'supply' | 'price' | 'logistics';
-}
+
 
 // Calculate aggregate risk score from commodity data
 const calculateCategoryRisk = (commodities: CommodityDefinition[], category: CommodityCategory): number => {
@@ -1242,47 +1234,77 @@ export const getSupplyChainIndices = async (): Promise<SupplyChainIndex[]> => {
 };
 
 export const getGeoRisks = async (): Promise<GeoRisk[]> => {
-  const allCommodities = ALL_COMMODITIES;
-  
-  // Group commodities by producer country and calculate risk
-  const countryData: Record<string, { materials: string[], riskSum: number, count: number }> = {};
-  
-  allCommodities.forEach(c => {
-    const country = c.producer;
-    if (!countryData[country]) {
-      countryData[country] = { materials: [], riskSum: 0, count: 0 };
+  // In a real app, this would be fetched from an API
+  return [
+    { 
+      id: '01',
+      country: 'CHINA', 
+      code: 'CN',
+      title: 'Rare Earth Monopoly', 
+      shortDesc: 'Controls 80% of global Gallium refining.',
+      fullDesc: 'China maintains a stranglehold on the processing and refining of rare earth elements, specifically Gallium and Germanium.',
+      impact: 'HIGH',
+      materials: ['Gallium', 'Germanium'],
+      marketImpact: '+12% Volatility',
+      timeline: 'Immediate',
+      lat: 35.8617, 
+      lng: 104.1954
+    },
+    { 
+      id: '02',
+      country: 'TAIWAN', 
+      code: 'TW',
+      title: 'The Silicon Shield', 
+      shortDesc: '90% of advanced logic chips (<5nm) mfg.',
+      fullDesc: 'TSMC produces over 90% of the world’s most advanced semiconductor chips. A flashpoint blockade would halt global tech.',
+      impact: 'CRITICAL',
+      materials: ['3nm Wafers'],
+      marketImpact: 'Global Halt',
+      timeline: 'Strategic',
+      lat: 23.6978, 
+      lng: 120.9605
+    },
+    { 
+      id: '03',
+      country: 'CONGO', 
+      code: 'CD',
+      title: 'Cobalt Instability', 
+      shortDesc: '70% of global cobalt extraction.',
+      fullDesc: 'The DRC sits on the vast majority of Cobalt reserves. Political instability creates a highly volatile supply chain.',
+      impact: 'MEDIUM',
+      materials: ['Cobalt', 'Copper'],
+      marketImpact: 'Supply Constraint',
+      timeline: 'Chronic',
+      lat: -4.0383, 
+      lng: 21.7587
+    },
+    { 
+      id: '04',
+      country: 'RUSSIA', 
+      code: 'RU',
+      title: 'Palladium Supply', 
+      shortDesc: 'Key supplier for sensor plating.',
+      fullDesc: 'Russia is a key supplier of palladium. Sanctions and trade barriers create supply uncertainty for western manufacturers.',
+      impact: 'MEDIUM',
+      materials: ['Palladium', 'C4F6'],
+      marketImpact: '+15% Cost',
+      timeline: 'Ongoing',
+      lat: 61.5240, 
+      lng: 105.3188
+    },
+    { 
+      id: '05',
+      country: 'USA', 
+      code: 'US',
+      title: 'Reshoring Delays', 
+      shortDesc: 'Permitting and talent bottlenecks.',
+      fullDesc: 'New fabs in Arizona and Ohio face delays due to environmental permitting, lack of skilled labor, and water rights.',
+      impact: 'MEDIUM',
+      materials: ['Fab Capacity'],
+      marketImpact: 'Delays',
+      timeline: 'Medium Term',
+      lat: 39.0902, 
+      lng: -98.7129
     }
-    countryData[country].materials.push(c.name);
-    countryData[country].riskSum += c.supplyChainRisk.primaryProducerShare + (c.supplyChainRisk.exportControlled ? 20 : 0);
-    countryData[country].count++;
-  });
-  
-  const geoRisks: GeoRisk[] = Object.entries(countryData)
-    .map(([country, data]) => ({
-      country,
-      riskScore: Math.min(100, Math.round(data.riskSum / data.count)),
-      controlledMaterials: data.materials.slice(0, 6),
-      description: generateCountryDescription(country, data.materials.length)
-    }))
-    .sort((a, b) => b.riskScore - a.riskScore)
-    .slice(0, 10); // Top 10 risk countries
-  
-  return geoRisks;
-};
-
-const generateCountryDescription = (country: string, materialCount: number): string => {
-  const descriptions: Record<string, string> = {
-    'China': 'Dominant supplier of rare earths, gallium, and germanium. Export controls on critical semiconductor inputs remain in effect.',
-    'DRC': 'Primary source of artisanal cobalt. Political instability and ESG concerns create chronic supply volatility.',
-    'Russia': 'Key supplier of palladium and neon gas. Ongoing sanctions create supply uncertainty for western fabs.',
-    'South Africa': 'Controls majority of platinum group metals. Power grid instability affects mining operations.',
-    'Chile': 'Major copper producer. Water rights and environmental regulations impact expansion capacity.',
-    'Australia': 'Significant lithium and rare earth reserves. Long shipping distances to Asian markets.',
-    'Japan': 'Critical wafer and specialty chemical supplier. Earthquake and tsunami risk to coastal facilities.',
-    'USA': 'Reshoring efforts face permitting and labor challenges. Water scarcity in Arizona fab corridor.',
-    'Taiwan': 'Produces >90% of advanced logic chips. Geopolitical tensions create strategic vulnerability.',
-    'Germany': 'Key specialty chemical and gas supplier. Energy cost volatility affects production economics.'
-  };
-  
-  return descriptions[country] || `Supplies ${materialCount} tracked materials. Regional factors may affect supply continuity.`;
+  ];
 };

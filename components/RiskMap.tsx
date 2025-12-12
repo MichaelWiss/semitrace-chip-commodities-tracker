@@ -1,97 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
+import { GeoRisk } from '../types';
 
 // Safe dynamic import pattern to prevent SSR/Module crashes
 let GlobeT: any = null;
-
-interface RiskItem {
-  id: string;
-  country: string;
-  code: string;
-  title: string;
-  shortDesc: string;
-  fullDesc: string;
-  impact: 'HIGH' | 'CRITICAL' | 'MEDIUM';
-  materials: string[];
-  marketImpact: string;
-  timeline: string;
-  lat: number;
-  lng: number;
-}
-
-const RISKS: RiskItem[] = [
-  { 
-    id: '01',
-    country: 'CHINA', 
-    code: 'CN',
-    title: 'Rare Earth Monopoly', 
-    shortDesc: 'Controls 80% of global Gallium refining.',
-    fullDesc: 'China maintains a stranglehold on the processing and refining of rare earth elements, specifically Gallium and Germanium.',
-    impact: 'HIGH',
-    materials: ['Gallium', 'Germanium'],
-    marketImpact: '+12% Volatility',
-    timeline: 'Immediate',
-    lat: 35.8617, 
-    lng: 104.1954
-  },
-  { 
-    id: '02',
-    country: 'TAIWAN', 
-    code: 'TW',
-    title: 'The Silicon Shield', 
-    shortDesc: '90% of advanced logic chips (<5nm) mfg.',
-    fullDesc: 'TSMC produces over 90% of the world’s most advanced semiconductor chips. A flashpoint blockade would halt global tech.',
-    impact: 'CRITICAL',
-    materials: ['3nm Wafers'],
-    marketImpact: 'Global Halt',
-    timeline: 'Strategic',
-    lat: 23.6978, 
-    lng: 120.9605
-  },
-  { 
-    id: '03',
-    country: 'CONGO', 
-    code: 'CD',
-    title: 'Cobalt Instability', 
-    shortDesc: '70% of global cobalt extraction.',
-    fullDesc: 'The DRC sits on the vast majority of Cobalt reserves. Political instability creates a highly volatile supply chain.',
-    impact: 'MEDIUM',
-    materials: ['Cobalt', 'Copper'],
-    marketImpact: 'Supply Constraint',
-    timeline: 'Chronic',
-    lat: -4.0383, 
-    lng: 21.7587
-  },
-  { 
-    id: '04',
-    country: 'RUSSIA', 
-    code: 'RU',
-    title: 'Palladium Supply', 
-    shortDesc: 'Key supplier for sensor plating.',
-    fullDesc: 'Russia is a key supplier of palladium. Sanctions and trade barriers create supply uncertainty for western manufacturers.',
-    impact: 'MEDIUM',
-    materials: ['Palladium', 'C4F6'],
-    marketImpact: '+15% Cost',
-    timeline: 'Ongoing',
-    lat: 61.5240, 
-    lng: 105.3188
-  },
-  { 
-    id: '05',
-    country: 'USA', 
-    code: 'US',
-    title: 'Reshoring Delays', 
-    shortDesc: 'Permitting and talent bottlenecks.',
-    fullDesc: 'New fabs in Arizona and Ohio face delays due to environmental permitting, lack of skilled labor, and water rights.',
-    impact: 'MEDIUM',
-    materials: ['Fab Capacity'],
-    marketImpact: 'Delays',
-    timeline: 'Medium Term',
-    lat: 39.0902, 
-    lng: -98.7129
-  }
-];
 
 // Fallback UI if WebGL fails
 const FallbackMap = () => (
@@ -105,7 +18,7 @@ const FallbackMap = () => (
 );
 
 // The Globe Component logic
-const GlobeVisualization = ({ hoveredId }: { hoveredId: string | null }) => {
+const GlobeVisualization = ({ hoveredId, risks }: { hoveredId: string | null, risks: GeoRisk[] }) => {
     const globeEl = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [GlobeComponent, setGlobeComponent] = useState<any>(null);
@@ -167,7 +80,7 @@ const GlobeVisualization = ({ hoveredId }: { hoveredId: string | null }) => {
     // Focus logic
     useEffect(() => {
         if (hoveredId && globeEl.current) {
-            const risk = RISKS.find(r => r.id === hoveredId);
+            const risk = risks.find(r => r.id === hoveredId);
             if (risk) {
                 globeEl.current.pointOfView({ lat: risk.lat, lng: risk.lng, altitude: 2.0 }, 1000);
             }
@@ -175,11 +88,11 @@ const GlobeVisualization = ({ hoveredId }: { hoveredId: string | null }) => {
              // Reset view slightly if nothing hovered
              globeEl.current.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 2000);
         }
-    }, [hoveredId]);
+    }, [hoveredId, risks]);
 
     // HTML Marker Renderer
     const htmlElementsData = useMemo(() => {
-        return RISKS.map(risk => ({
+        return risks.map(risk => ({
             lat: risk.lat,
             lng: risk.lng,
             id: risk.id,
@@ -187,7 +100,7 @@ const GlobeVisualization = ({ hoveredId }: { hoveredId: string | null }) => {
             code: risk.code,
             altitude: 0.015
         }));
-    }, []);
+    }, [risks]);
 
     return (
         <div ref={containerRef} className="w-full h-full">
@@ -226,38 +139,16 @@ const GlobeVisualization = ({ hoveredId }: { hoveredId: string | null }) => {
                         const isCritical = d.impact === 'CRITICAL';
                         
                         const el = document.createElement('div');
+                        el.className = "relative";
+                        
+                        const markerSize = isHovered ? 'w-6 h-6' : 'w-3 h-3';
+                        const markerBg = isCritical ? 'bg-accent' : 'bg-text';
+                        const labelTop = isHovered ? 'top-[14px]' : 'top-2';
+                        const labelOpacity = isHovered ? 'opacity-100' : 'opacity-70';
+
                         el.innerHTML = `
-                            <div style="position: relative;">
-                                <div style="
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    transform: translate(-50%, -50%);
-                                    width: ${isHovered ? '24px' : '12px'};
-                                    height: ${isHovered ? '24px' : '12px'};
-                                    background-color: ${isCritical ? '#D94E28' : '#1A1918'};
-                                    border: 2px solid #F4F1EA;
-                                    border-radius: 50%;
-                                    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-                                    transition: all 0.3s ease;
-                                "></div>
-                                <div style="
-                                    position: absolute;
-                                    top: ${isHovered ? '14px' : '8px'};
-                                    left: 50%;
-                                    transform: translateX(-50%);
-                                    background: #1A1918;
-                                    color: #F4F1EA;
-                                    padding: 2px 6px;
-                                    font-family: 'Manrope', sans-serif;
-                                    font-size: 10px;
-                                    font-weight: 700;
-                                    border-radius: 2px;
-                                    opacity: ${isHovered ? 1 : 0.7};
-                                    white-space: nowrap;
-                                    pointer-events: none;
-                                ">${d.code}</div>
-                            </div>
+                            <div class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 ${markerSize} ${markerBg} border-2 border-background rounded-full shadow-[0_0_10px_rgba(0,0,0,0.2)] transition-all duration-300"></div>
+                            <div class="absolute ${labelTop} left-1/2 -translate-x-1/2 bg-text text-background px-1.5 py-0.5 font-sans text-[10px] font-bold rounded-sm ${labelOpacity} whitespace-nowrap pointer-events-none">${d.code}</div>
                         `;
                         return el;
                     }}
@@ -271,13 +162,13 @@ const GlobeVisualization = ({ hoveredId }: { hoveredId: string | null }) => {
     );
 };
 
-export const RiskMap: React.FC = () => {
+export const RiskMap: React.FC<{ risks?: GeoRisk[] }> = ({ risks = [] }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const activeRisk = useMemo(() => 
-    RISKS.find(r => r.id === selectedId) || null
-  , [selectedId]);
+    risks.find(r => r.id === selectedId) || null
+  , [selectedId, risks]);
 
   return (
     <div className="w-full py-24 md:py-32">
@@ -301,7 +192,7 @@ export const RiskMap: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-text">
         {/* List Section */}
         <div className="border-r border-text border-opacity-20" role="list">
-            {RISKS.map((risk, index) => (
+            {risks.map((risk, index) => (
               <div 
                 key={risk.id}
                 id={`risk-item-${risk.id}`}
@@ -317,12 +208,12 @@ export const RiskMap: React.FC = () => {
                   }
                   if (e.key === 'ArrowDown') {
                     e.preventDefault();
-                    const nextId = RISKS[index + 1]?.id;
+                    const nextId = risks[index + 1]?.id;
                     if (nextId) document.getElementById(`risk-item-${nextId}`)?.focus();
                   }
                   if (e.key === 'ArrowUp') {
                     e.preventDefault();
-                    const prevId = RISKS[index - 1]?.id;
+                    const prevId = risks[index - 1]?.id;
                     if (prevId) document.getElementById(`risk-item-${prevId}`)?.focus();
                   }
                 }}
@@ -372,7 +263,7 @@ export const RiskMap: React.FC = () => {
         <div className="relative h-[600px] overflow-hidden bg-[#E6E2D8] flex items-center justify-center">
             {/* 3D Globe Container */}
             <div className="w-full h-full cursor-move">
-                <GlobeVisualization hoveredId={hoveredId || selectedId} />
+                <GlobeVisualization hoveredId={hoveredId || selectedId} risks={risks} />
             </div>
             
             {/* Map Overlays */}
@@ -403,7 +294,7 @@ export const RiskMap: React.FC = () => {
   );
 };
 
-const DetailPanel = ({ activeRisk, onClose }: { activeRisk: RiskItem, onClose: () => void }) => {
+const DetailPanel = ({ activeRisk, onClose }: { activeRisk: GeoRisk, onClose: () => void }) => {
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();

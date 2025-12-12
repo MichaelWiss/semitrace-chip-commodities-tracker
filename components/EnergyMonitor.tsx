@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { PowerHub, GlobalEnergyMetrics } from '../types';
 import { getPowerHubs, getEnergyMetrics } from '../services/marketService';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, Legend, Line, ComposedChart } from 'recharts';
-import { PowerHubSkeleton } from './SkeletonLoader';
+import { PowerHubSkeleton, ErrorState } from './SkeletonLoader';
 
 // Memoized hub selector item to prevent unnecessary re-renders
 interface HubSelectorItemProps {
@@ -17,7 +17,7 @@ const HubSelectorItem = React.memo<HubSelectorItemProps>(({ hub, isSelected, onS
     onClick={() => onSelect(hub)}
     className={`
       group p-6 cursor-pointer border-b border-text/10 transition-colors
-      ${isSelected ? 'bg-[#1A1918] text-[#F4F1EA]' : 'hover:bg-white'}
+      ${isSelected ? 'bg-text text-background' : 'hover:bg-white'}
     `}
   >
     <div className="flex justify-between items-center mb-2">
@@ -98,11 +98,7 @@ export const EnergyMonitor: React.FC = () => {
   }
 
   if (error) {
-    return (
-      <div className="w-full py-24 border-t border-text/10 bg-[#F4F1EA] flex justify-center items-center min-h-[400px]">
-        <div className="text-accent font-mono text-sm">{error}</div>
-      </div>
-    );
+    return <ErrorState message={error} />;
   }
 
   if (!metrics || !selectedHub) return null;
@@ -117,7 +113,7 @@ export const EnergyMonitor: React.FC = () => {
     : "Low renewable output may increase reliance on gas/coal peaker plants.";
 
   return (
-    <div className="w-full py-24 border-t border-text/10 bg-[#F4F1EA]">
+    <div className="w-full py-24 border-t border-text/10 bg-background">
       <div className="max-w-[90vw] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16">
           <div className="max-w-xl">
@@ -206,7 +202,7 @@ export const EnergyMonitor: React.FC = () => {
                                  <motion.div 
                                     initial={{ width: 0 }}
                                     animate={{ width: `${selectedHub.renewables.currentSolarLoad}%` }}
-                                    className="h-full bg-[#D94E28]"
+                                    className="h-full bg-accent"
                                  />
                              </div>
                         </div>
@@ -260,9 +256,9 @@ export const EnergyMonitor: React.FC = () => {
                      <div className="flex justify-between items-end mb-4">
                         <span className="font-sans text-[10px] uppercase tracking-widest text-secondary block">24H Forecast: Strain, Carbon & Renewables</span>
                         <div className="flex gap-4">
-                            <span className="flex items-center gap-1 font-mono text-[9px] text-secondary"><div className="w-2 h-2 bg-[#1A1918]"></div>NET STRAIN</span>
+                            <span className="flex items-center gap-1 font-mono text-[9px] text-secondary"><div className="w-2 h-2 bg-text"></div>NET STRAIN</span>
                             <span className="flex items-center gap-1 font-mono text-[9px] text-text/50"><div className="w-2 h-0.5 bg-text/50 border-t border-dashed border-text/50"></div>CARBON</span>
-                            <span className="flex items-center gap-1 font-mono text-[9px] text-[#D94E28]"><div className="w-2 h-2 bg-[#D94E28]"></div>SOLAR</span>
+                            <span className="flex items-center gap-1 font-mono text-[9px] text-accent"><div className="w-2 h-2 bg-accent"></div>SOLAR</span>
                             <span className="flex items-center gap-1 font-mono text-[9px] text-secondary/60"><div className="w-2 h-0.5 bg-secondary/60"></div>WIND</span>
                         </div>
                      </div>

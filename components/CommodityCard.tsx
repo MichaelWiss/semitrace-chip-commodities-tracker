@@ -12,11 +12,11 @@ const RiskBar = ({ label, value }: { label: string, value: number }) => (
   <div className="mb-3">
     <div className="flex justify-between text-[10px] uppercase tracking-wider mb-1">
       <span className="text-secondary">{label}</span>
-      <span className={`font-mono ${value > 70 ? 'text-[#D94E28]' : 'text-text'}`}>{value}/100</span>
+      <span className={`font-mono ${value > 70 ? 'text-accent' : 'text-text'}`}>{value}/100</span>
     </div>
     <div className="h-1 w-full bg-subtle rounded-full overflow-hidden">
       <div 
-        className={`h-full ${value > 70 ? 'bg-[#D94E28]' : 'bg-text'}`} 
+        className={`h-full ${value > 70 ? 'bg-accent' : 'bg-text'}`} 
         style={{ width: `${value}%` }}
       />
     </div>
@@ -25,7 +25,7 @@ const RiskBar = ({ label, value }: { label: string, value: number }) => (
 
 const SectorTag: React.FC<{ name: string, criticality: 'High' | 'Medium' | 'Low' }> = ({ name, criticality }) => {
   const colors = {
-    High: 'bg-[#D94E28] text-white border-[#D94E28]',
+    High: 'bg-accent text-white border-accent',
     Medium: 'bg-surface text-text border-text',
     Low: 'bg-surface text-secondary border-subtle'
   };
@@ -53,9 +53,9 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
   const lastForecast = data.forecast?.[data.forecast.length - 1];
   const outlookStatus = lastForecast?.status || 'Unknown';
   const outlookColor = 
-    outlookStatus === 'Shortage' ? 'text-[#D94E28]' : 
-    outlookStatus === 'Tight' ? 'text-[#D94E28] opacity-80' : 
-    'text-[#6B665F]';
+    outlookStatus === 'Shortage' ? 'text-accent' : 
+    outlookStatus === 'Tight' ? 'text-accent opacity-80' : 
+    'text-secondary';
   
   return (
     <motion.div
@@ -102,7 +102,7 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
           {/* Outlook Indicator */}
           <div className="hidden lg:block text-right">
              <div className="flex items-center justify-end gap-2">
-                {outlookStatus === 'Shortage' && <span className="w-2 h-2 rounded-full bg-[#D94E28] animate-pulse shadow-[0_0_8px_#D94E28]" />}
+                {outlookStatus === 'Shortage' && <span className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-accent/50" />}
                 <span className={`font-mono text-lg ${outlookColor}`}>{outlookStatus.toUpperCase()}</span>
              </div>
              <span className="block font-sans text-[10px] text-secondary uppercase tracking-wider">6M Supply Forecast</span>
@@ -148,7 +148,7 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
                    <div className="grid grid-cols-2 gap-6">
                       <div>
                         <span className="block font-sans text-[10px] text-secondary uppercase mb-1">Purity / Grade</span>
-                        <span className="font-mono text-sm block">{data.materialProperties?.purity || 'N/A'}</span>
+                        <span className="font-mono text-sm block">{data.materialProperties?.purityGrade || 'N/A'}</span>
                       </div>
                       <div>
                         <span className="block font-sans text-[10px] text-secondary uppercase mb-1">Form</span>
@@ -160,7 +160,7 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
                       </div>
                       <div>
                         <span className="block font-sans text-[10px] text-secondary uppercase mb-1">Conflict Mineral</span>
-                        <span className="font-mono text-sm block">{data.esgMetrics?.conflictMineral ? 'Yes' : 'No'}</span>
+                        <span className="font-mono text-sm block">{data.esgMetrics?.conflictMineralStatus ? 'Yes' : 'No'}</span>
                       </div>
                    </div>
 
@@ -168,10 +168,9 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
                    {data.supplyChainRisk && (
                      <div>
                        <h4 className="font-sans font-bold text-xs uppercase tracking-widest mb-4 text-accent">Supply Chain Risk</h4>
-                       <RiskBar label="Geopolitical" value={data.supplyChainRisk.geopolitical} />
-                       <RiskBar label="Logistics" value={data.supplyChainRisk.logistics} />
-                       <RiskBar label="Environmental" value={data.supplyChainRisk.environmental} />
-                       <RiskBar label="Supplier Health" value={data.supplyChainRisk.supplierHealth} />
+                       <RiskBar label="Primary Producer Share" value={data.supplyChainRisk.primaryProducerShare} />
+                       <RiskBar label="Top 3 Producer Share" value={data.supplyChainRisk.top3ProducerShare} />
+                       <RiskBar label="Recycling Rate" value={data.supplyChainRisk.recyclingRate} />
                      </div>
                    )}
 
@@ -327,7 +326,7 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
                                </span>
                            </div>
                        </div>
-                       <div className="h-[100px] w-full bg-[#F4F1EA] border border-subtle p-2">
+                       <div className="h-[100px] w-full bg-background border border-subtle p-2">
                           <ResponsiveContainer width="100%" height="100%">
                               <ComposedChart data={forecastData}>
                                   <defs>

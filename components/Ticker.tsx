@@ -1,13 +1,33 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Commodity } from '../types';
 
-const ITEMS = [
-  "COPPER (HG)", "GOLD (GC)", "SILVER (SI)", "PLATINUM (PL)", 
-  "PALLADIUM (PA)", "SILICON (SI)", "TUNGSTEN (W)", "TITANIUM (TI)",
-  "HELIUM (HE)", "NEON (NE)", "COBALT (CO)", "LITHIUM (LI)"
+interface TickerProps {
+  commodities?: Commodity[];
+}
+
+// Fallback items when no commodities are loaded yet
+const FALLBACK_ITEMS = [
+  { name: "COPPER (HG)", change: 0.34 },
+  { name: "GOLD (GC)", change: 0.14 },
+  { name: "SILVER (SI)", change: -0.24 },
+  { name: "PLATINUM (PL)", change: 0.44 },
+  { name: "PALLADIUM (PA)", change: -0.54 },
+  { name: "SILICON (SI)", change: 0.64 },
 ];
 
-export const Ticker: React.FC = () => {
+export const Ticker: React.FC<TickerProps> = ({ commodities = [] }) => {
+  // Use live commodity data if available, otherwise use fallback
+  const tickerItems = commodities.length > 0
+    ? commodities.slice(0, 12).map(c => ({
+        name: `${c.name.toUpperCase()} (${c.symbol})`,
+        change: c.changePercentage
+      }))
+    : FALLBACK_ITEMS;
+
+  // Duplicate items for seamless scrolling
+  const displayItems = [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems];
+
   return (
     <div className="w-full py-6 border-y border-text border-opacity-10 bg-surface relative z-10 overflow-hidden">
       <motion.div 
@@ -19,13 +39,15 @@ export const Ticker: React.FC = () => {
           duration: 40 
         }}
       >
-        {[...ITEMS, ...ITEMS, ...ITEMS, ...ITEMS].map((item, idx) => (
+        {displayItems.map((item, idx) => (
           <div key={idx} className="flex items-center mx-8">
-            <span className="w-2 h-2 bg-accent rounded-full mr-4"></span>
+            <span className={`w-2 h-2 rounded-full mr-4 ${item.change >= 0 ? 'bg-accent' : 'bg-secondary'}`}></span>
             <span className="font-sans font-bold text-xl md:text-2xl tracking-tight text-text opacity-80">
-              {item}
+              {item.name}
             </span>
-            <span className="ml-4 font-mono text-sm text-secondary">+0.{idx}4%</span>
+            <span className={`ml-4 font-mono text-sm ${item.change >= 0 ? 'text-text' : 'text-accent'}`}>
+              {item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}%
+            </span>
           </div>
         ))}
       </motion.div>

@@ -1,5 +1,17 @@
 import React from 'react';
 
+// Shared Error State Component
+interface ErrorStateProps {
+  message: string;
+  className?: string;
+}
+
+export const ErrorState: React.FC<ErrorStateProps> = ({ message, className = '' }) => (
+  <div className={`w-full py-24 border-t border-text/10 bg-background flex justify-center items-center min-h-[400px] ${className}`}>
+    <div className="text-accent font-mono text-sm">{message}</div>
+  </div>
+);
+
 export const CommodityCardSkeleton: React.FC = () => (
   <div className="border-b border-subtle py-8 animate-pulse">
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-4 md:px-0">
@@ -26,7 +38,7 @@ export const CommodityCardSkeleton: React.FC = () => (
 );
 
 export const PowerHubSkeleton: React.FC = () => (
-  <div className="w-full py-24 border-t border-text/10 bg-[#F4F1EA]">
+  <div className="w-full py-24 border-t border-text/10 bg-background">
     <div className="max-w-[90vw] mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-end mb-16 animate-pulse">
         <div className="space-y-4 w-full max-w-xl">

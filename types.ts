@@ -148,10 +148,18 @@ export interface MarketTicker {
 }
 
 export interface GeoRisk {
+  id: string;
   country: string;
-  riskScore: number; // 0-100
-  controlledMaterials: string[];
-  description: string;
+  code: string;
+  title: string;
+  shortDesc: string;
+  fullDesc: string;
+  impact: 'HIGH' | 'CRITICAL' | 'MEDIUM';
+  materials: string[];
+  marketImpact: string;
+  timeline: string;
+  lat: number;
+  lng: number;
 }
 
 export interface RiskAlert {

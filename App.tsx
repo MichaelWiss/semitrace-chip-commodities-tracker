@@ -98,7 +98,7 @@ export default function App() {
         <main className="relative flex-grow">
           <Hero />
           
-          <Ticker />
+          <Ticker commodities={commodities} />
 
           <div id="materials" className="max-w-[90vw] mx-auto py-32 md:py-48">
             
@@ -132,22 +132,22 @@ export default function App() {
                     return (
                       <div 
                         key={idx.id} 
-                        className={`relative p-5 border transition-all hover:shadow-lg ${isHigh ? 'bg-[#D94E28]/5 border-[#D94E28]/30' : isLow ? 'bg-green-50 border-green-200' : 'bg-surface border-subtle'}`}
+                        className={`relative p-5 border transition-all hover:shadow-lg ${isHigh ? 'bg-accent/5 border-accent/30' : isLow ? 'bg-green-50 border-green-200' : 'bg-surface border-subtle'}`}
                       >
                         <h4 className="font-sans text-[10px] font-bold uppercase tracking-widest text-secondary mb-3 leading-tight min-h-[28px]">
                           {idx.name}
                         </h4>
                         <div className="flex items-end justify-between">
-                          <span className={`font-mono text-3xl ${isHigh ? 'text-[#D94E28]' : 'text-text'}`}>
+                          <span className={`font-mono text-3xl ${isHigh ? 'text-accent' : 'text-text'}`}>
                             {idx.value}
                           </span>
-                          <span className={`font-mono text-sm ${idx.change > 0 ? 'text-[#D94E28]' : 'text-green-600'}`}>
+                          <span className={`font-mono text-sm ${idx.change > 0 ? 'text-accent' : 'text-green-600'}`}>
                             {idx.change > 0 ? '↑' : '↓'}{Math.abs(idx.change)}
                           </span>
                         </div>
                         <div className="mt-3 h-1 w-full bg-subtle rounded-full overflow-hidden">
                           <div 
-                            className={`h-full ${isHigh ? 'bg-[#D94E28]' : isLow ? 'bg-green-500' : 'bg-text'}`}
+                            className={`h-full ${isHigh ? 'bg-accent' : isLow ? 'bg-green-500' : 'bg-text'}`}
                             style={{ width: `${idx.value}%` }}
                           />
                         </div>
@@ -212,7 +212,7 @@ export default function App() {
             <div className="max-w-[90vw] mx-auto">
               <ErrorBoundary>
                 <Suspense fallback={<SectionLoader />}>
-                  <RiskMap />
+                  <RiskMap risks={geoRisks} />
                 </Suspense>
               </ErrorBoundary>
             </div>

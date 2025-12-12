@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ToolingEntity } from '../types';
 import { getToolingEntities } from '../services/marketService';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
-import { ToolingTrackerSkeleton } from './SkeletonLoader';
+import { ToolingTrackerSkeleton, ErrorState } from './SkeletonLoader';
 
 // Memoized tooling card to prevent unnecessary re-renders
 interface ToolingCardProps {
@@ -131,11 +131,7 @@ export const ToolingTracker: React.FC = () => {
   }
 
   if (error) {
-    return (
-      <div className="w-full py-24 bg-background border-t border-text/10 flex justify-center items-center min-h-[400px]">
-        <div className="text-accent font-mono text-sm">{error}</div>
-      </div>
-    );
+    return <ErrorState message={error} />;
   }
 
   if (entities.length === 0) return null;
