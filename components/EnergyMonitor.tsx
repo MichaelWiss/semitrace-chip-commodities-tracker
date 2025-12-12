@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { PowerHub, GlobalEnergyMetrics } from '../types';
 import { getPowerHubs, getEnergyMetrics } from '../services/marketService';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, Legend, Line, ComposedChart } from 'recharts';
+import { PowerHubSkeleton } from './SkeletonLoader';
 
 // Memoized hub selector item to prevent unnecessary re-renders
 interface HubSelectorItemProps {
@@ -55,6 +56,8 @@ export const EnergyMonitor: React.FC = () => {
   const [hubs, setHubs] = useState<PowerHub[]>([]);
   const [metrics, setMetrics] = useState<GlobalEnergyMetrics | null>(null);
   const [selectedHub, setSelectedHub] = useState<PowerHub | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const handleHubSelect = useCallback((hub: PowerHub) => {
     setSelectedHub(hub);
@@ -73,14 +76,34 @@ export const EnergyMonitor: React.FC = () => {
 
   useEffect(() => {
     const load = async () => {
-      const h = await getPowerHubs();
-      const m = await getEnergyMetrics();
-      setHubs(h);
-      setMetrics(m);
-      setSelectedHub(h[0]);
+      try {
+        setLoading(true);
+        const h = await getPowerHubs();
+        const m = await getEnergyMetrics();
+        setHubs(h);
+        setMetrics(m);
+        setSelectedHub(h[0]);
+      } catch (err) {
+        console.error("Failed to load energy data:", err);
+        setError("Failed to load energy data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
     load();
   }, []);
+
+  if (loading) {
+    return <PowerHubSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="w-full py-24 border-t border-text/10 bg-[#F4F1EA] flex justify-center items-center min-h-[400px]">
+        <div className="text-accent font-mono text-sm">{error}</div>
+      </div>
+    );
+  }
 
   if (!metrics || !selectedHub) return null;
 

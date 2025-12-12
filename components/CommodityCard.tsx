@@ -65,7 +65,10 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
       transition={{ duration: 0.6, delay: index * 0.05 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative border-b border-subtle py-8 cursor-pointer transition-all duration-500 hover:bg-surface"
+      onFocus={() => setIsHovered(true)}
+      onBlur={() => setIsHovered(false)}
+      tabIndex={0}
+      className="group relative border-b border-subtle py-8 cursor-pointer transition-all duration-500 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-4 md:px-0 relative z-10">
         
@@ -112,7 +115,7 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
                animate={{ rotate: isHovered ? 45 : 0 }}
                className="w-8 h-8 flex items-center justify-center rounded-full border border-text text-text"
             >
-               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
                </svg>
             </motion.div>

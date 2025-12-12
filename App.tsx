@@ -1,8 +1,9 @@
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { Ticker } from './components/Ticker';
 import { CommodityCard } from './components/CommodityCard';
+import { CommodityCardSkeleton } from './components/SkeletonLoader';
 import { getCommodities, getSupplyChainIndices, getGeoRisks } from './services/marketService';
 import { Commodity, CommodityCategory, SupplyChainIndex, GeoRisk } from './types';
 
@@ -61,25 +62,28 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [commoditiesData, indicesData, risksData] = await Promise.all([
-          getCommodities(),
-          getSupplyChainIndices(),
-          getGeoRisks()
-        ]);
-        setCommodities(commoditiesData);
-        setIndices(indicesData);
-        setGeoRisks(risksData);
-      } catch (e) {
-        console.error("Failed to initialize app data", e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+  const fetchData = useCallback(async () => {
+    try {
+      const [commoditiesData, indicesData, risksData] = await Promise.all([
+        getCommodities(),
+        getSupplyChainIndices(),
+        getGeoRisks()
+      ]);
+      setCommodities(commoditiesData);
+      setIndices(indicesData);
+      setGeoRisks(risksData);
+    } catch (e) {
+      console.error("Failed to initialize app data", e);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 5 * 60 * 1000); // 5 minutes
+    return () => clearInterval(interval);
+  }, [fetchData]);
 
   const categories = Object.values(CommodityCategory);
   const filteredCategories = selectedCategory === 'ALL' 
@@ -174,8 +178,10 @@ export default function App() {
             </div>
 
             {loading ? (
-              <div className="h-64 flex items-center justify-center">
-                  <span className="font-mono text-xs animate-pulse tracking-widest text-secondary">RETRIEVING DATA STREAMS...</span>
+              <div className="space-y-0">
+                {[1, 2, 3, 4, 5].map(i => (
+                  <CommodityCardSkeleton key={i} />
+                ))}
               </div>
             ) : (
               <div className="space-y-40">
@@ -204,22 +210,28 @@ export default function App() {
 
           <div id="risk" className="bg-surface relative border-t border-text">
             <div className="max-w-[90vw] mx-auto">
-              <Suspense fallback={<SectionLoader />}>
-                <RiskMap />
-              </Suspense>
+              <ErrorBoundary>
+                <Suspense fallback={<SectionLoader />}>
+                  <RiskMap />
+                </Suspense>
+              </ErrorBoundary>
             </div>
           </div>
 
           <div id="energy">
-            <Suspense fallback={<SectionLoader />}>
-              <EnergyMonitor />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<SectionLoader />}>
+                <EnergyMonitor />
+              </Suspense>
+            </ErrorBoundary>
           </div>
 
           <div id="tooling">
-            <Suspense fallback={<SectionLoader />}>
-              <ToolingTracker />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<SectionLoader />}>
+                <ToolingTracker />
+              </Suspense>
+            </ErrorBoundary>
           </div>
         </main>
 

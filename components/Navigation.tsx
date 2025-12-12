@@ -15,15 +15,20 @@ export const Navigation: React.FC = () => {
       </div>
       
       <div className="hidden md:flex items-center gap-12">
-        <a href="#materials" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors">INDEX</a>
-        <a href="#risk" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors">RISK MAP</a>
-        <a href="#energy" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors">ENERGY</a>
-        <a href="#tooling" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors">INDUSTRIAL</a>
-        <a href="#analysis" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors">ANALYSIS</a>
+        <a href="#materials" aria-label="Go to materials index" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">INDEX</a>
+        <a href="#risk" aria-label="Go to risk map" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">RISK MAP</a>
+        <a href="#energy" aria-label="Go to energy monitor" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">ENERGY</a>
+        <a href="#tooling" aria-label="Go to industrial tooling" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">INDUSTRIAL</a>
+        <a href="#analysis" aria-label="Go to analysis section" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">ANALYSIS</a>
       </div>
 
       <div>
-        <div className="group cursor-pointer">
+        <div 
+          className="group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" 
+          role="button" 
+          aria-label="Toggle menu" 
+          tabIndex={0}
+        >
           <div className="h-[2px] w-8 bg-text mb-1.5 transition-all group-hover:w-6 ml-auto"></div>
           <div className="h-[2px] w-8 bg-text transition-all group-hover:w-4 ml-auto"></div>
         </div>

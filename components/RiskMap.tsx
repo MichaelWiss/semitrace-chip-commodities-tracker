@@ -300,15 +300,35 @@ export const RiskMap: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-text">
         {/* List Section */}
-        <div className="border-r border-text border-opacity-20">
-            {RISKS.map((risk) => (
+        <div className="border-r border-text border-opacity-20" role="list">
+            {RISKS.map((risk, index) => (
               <div 
                 key={risk.id}
+                id={`risk-item-${risk.id}`}
+                role="button"
+                tabIndex={0}
                 onMouseEnter={() => setHoveredId(risk.id)}
                 onMouseLeave={() => setHoveredId(null)}
                 onClick={() => setSelectedId(risk.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedId(risk.id);
+                  }
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const nextId = RISKS[index + 1]?.id;
+                    if (nextId) document.getElementById(`risk-item-${nextId}`)?.focus();
+                  }
+                  if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const prevId = RISKS[index - 1]?.id;
+                    if (prevId) document.getElementById(`risk-item-${prevId}`)?.focus();
+                  }
+                }}
                 className={`
                     group relative border-b border-text border-opacity-20 p-6 md:p-10 cursor-pointer transition-all duration-300
+                    focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent
                     ${selectedId === risk.id ? 'bg-surface' : 'hover:bg-white'}
                 `}
               >
@@ -373,55 +393,76 @@ export const RiskMap: React.FC = () => {
       {/* Slide-over Detail Panel */}
       <AnimatePresence>
         {selectedId && activeRisk && (
-            <motion.div 
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="fixed inset-y-0 right-0 w-full md:w-[600px] bg-background border-l border-text z-[100] shadow-2xl p-8 md:p-16 overflow-y-auto"
-            >
-                <button 
-                    onClick={() => setSelectedId(null)}
-                    className="absolute top-8 right-8 w-12 h-12 flex items-center justify-center border border-text rounded-full hover:bg-text hover:text-white transition-colors"
-                >
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M1 13L13 1M1 1L13 13" stroke="currentColor" strokeWidth="1.5"/>
-                    </svg>
-                </button>
-
-                <span className="font-mono text-xs text-accent tracking-widest block mb-8">RISK DETAIL — {activeRisk.code}</span>
-                
-                <h2 className="font-serif text-5xl md:text-6xl mb-8 leading-[0.9]">
-                    {activeRisk.title}
-                </h2>
-
-                <div className="grid grid-cols-2 gap-8 border-y border-text border-opacity-20 py-8 mb-8">
-                    <div>
-                        <span className="font-sans text-[10px] uppercase tracking-widest text-secondary block mb-2">Primary Impact</span>
-                        <span className="font-serif text-xl">{activeRisk.marketImpact}</span>
-                    </div>
-                    <div>
-                        <span className="font-sans text-[10px] uppercase tracking-widest text-secondary block mb-2">Timeline</span>
-                        <span className="font-serif text-xl">{activeRisk.timeline}</span>
-                    </div>
-                </div>
-
-                <p className="font-serif text-xl leading-relaxed text-secondary mb-12">
-                    {activeRisk.fullDesc}
-                </p>
-
-                <h3 className="font-sans text-sm font-bold uppercase tracking-widest mb-6">Affected Materials</h3>
-                <div className="space-y-4">
-                    {activeRisk.materials.map(mat => (
-                        <div key={mat} className="flex items-center justify-between border-b border-subtle pb-2">
-                            <span className="font-mono text-sm">{mat}</span>
-                            <span className="w-2 h-2 bg-accent rounded-full"></span>
-                        </div>
-                    ))}
-                </div>
-            </motion.div>
+            <DetailPanel 
+                activeRisk={activeRisk} 
+                onClose={() => setSelectedId(null)} 
+            />
         )}
       </AnimatePresence>
     </div>
   );
+};
+
+const DetailPanel = ({ activeRisk, onClose }: { activeRisk: RiskItem, onClose: () => void }) => {
+    useEffect(() => {
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [onClose]);
+
+    return (
+        <motion.div 
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed inset-y-0 right-0 w-full md:w-[600px] bg-background border-l border-text z-[100] shadow-2xl p-8 md:p-16 overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Risk details for ${activeRisk.title}`}
+        >
+            <button 
+                onClick={onClose}
+                aria-label="Close details"
+                className="absolute top-8 right-8 w-12 h-12 flex items-center justify-center border border-text rounded-full hover:bg-text hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 13L13 1M1 1L13 13" stroke="currentColor" strokeWidth="1.5"/>
+                </svg>
+            </button>
+
+            <span className="font-mono text-xs text-accent tracking-widest block mb-8">RISK DETAIL — {activeRisk.code}</span>
+            
+            <h2 className="font-serif text-5xl md:text-6xl mb-8 leading-[0.9]">
+                {activeRisk.title}
+            </h2>
+
+            <div className="grid grid-cols-2 gap-8 border-y border-text border-opacity-20 py-8 mb-8">
+                <div>
+                    <span className="font-sans text-[10px] uppercase tracking-widest text-secondary block mb-2">Primary Impact</span>
+                    <span className="font-serif text-xl">{activeRisk.marketImpact}</span>
+                </div>
+                <div>
+                    <span className="font-sans text-[10px] uppercase tracking-widest text-secondary block mb-2">Timeline</span>
+                    <span className="font-serif text-xl">{activeRisk.timeline}</span>
+                </div>
+            </div>
+
+            <p className="font-serif text-xl leading-relaxed text-secondary mb-12">
+                {activeRisk.fullDesc}
+            </p>
+
+            <h3 className="font-sans text-sm font-bold uppercase tracking-widest mb-6">Affected Materials</h3>
+            <div className="space-y-4">
+                {activeRisk.materials.map(mat => (
+                    <div key={mat} className="flex items-center justify-between border-b border-subtle pb-2">
+                        <span className="font-mono text-sm">{mat}</span>
+                        <span className="w-2 h-2 bg-accent rounded-full"></span>
+                    </div>
+                ))}
+            </div>
+        </motion.div>
+    );
 };

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ToolingEntity } from '../types';
 import { getToolingEntities } from '../services/marketService';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
+import { ToolingTrackerSkeleton } from './SkeletonLoader';
 
 // Memoized tooling card to prevent unnecessary re-renders
 interface ToolingCardProps {
@@ -106,14 +107,36 @@ const ToolingCard = React.memo<ToolingCardProps>(({ company, idx }) => (
 
 export const ToolingTracker: React.FC = () => {
   const [entities, setEntities] = useState<ToolingEntity[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadToolingData = async () => {
-      const data = await getToolingEntities();
-      setEntities(data);
+      try {
+        setLoading(true);
+        const data = await getToolingEntities();
+        setEntities(data);
+      } catch (err) {
+        console.error("Failed to load tooling data:", err);
+        setError("Failed to load tooling data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
     loadToolingData();
   }, []);
+
+  if (loading) {
+    return <ToolingTrackerSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="w-full py-24 bg-background border-t border-text/10 flex justify-center items-center min-h-[400px]">
+        <div className="text-accent font-mono text-sm">{error}</div>
+      </div>
+    );
+  }
 
   if (entities.length === 0) return null;
 
