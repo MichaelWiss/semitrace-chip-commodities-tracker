@@ -70,7 +70,7 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
       tabIndex={0}
       className="group relative border-b-[3px] border-text py-12 cursor-pointer transition-all duration-500 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-4 md:px-0 relative z-10">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-0 md:px-0 relative z-10">
         
         {/* Index & Name */}
         <div className="flex items-center gap-8 w-full md:w-1/3">

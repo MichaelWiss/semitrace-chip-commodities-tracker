@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import { Navigation } from './components/Navigation';
+import { GridOverlay } from './components/GridOverlay';
 import { StylePreview } from './components/StylePreview';
 import { Hero } from './components/Hero';
 import { Ticker } from './components/Ticker';
@@ -93,7 +94,8 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <div className="bg-background text-text selection:bg-accent selection:text-white min-h-screen flex flex-col">
+      <div className="bg-background text-text selection:bg-accent selection:text-white min-h-screen flex flex-col relative">
+        <GridOverlay />
         <Navigation />
         
         <main className="relative flex-grow">
@@ -101,7 +103,7 @@ export default function App() {
           
           <Ticker commodities={commodities} />
 
-          <div id="materials" className="w-full max-w-[94vw] mx-auto py-32 md:py-48">
+          <div id="materials" className="w-[95%] mx-auto py-32 md:py-48">
             
             {/* Header Section */}
             <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 items-end mb-16 px-0 border-b-[3px] border-text pb-12">
@@ -128,7 +130,7 @@ export default function App() {
                      <h3 className="font-mono text-sm font-bold tracking-[0.1em] uppercase text-text border-b-2 border-text pb-1 inline-block">SUPPLY CHAIN INDICES</h3>
                   </div>
                 </div>
-                <div className="grid grid-cols-4 md:grid-cols-12 gap-4">
+                <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 gap-y-4">
                   {indices.map(idx => {
                     const isHigh = idx.value > 70;
                     const isLow = idx.value < 40;
@@ -215,7 +217,7 @@ export default function App() {
           </div>
 
           <div id="risk" className="bg-surface relative border-t-[3px] border-text">
-            <div className="w-full max-w-[94vw] mx-auto">
+            <div className="w-[95%] mx-auto">
               <ErrorBoundary>
                 <Suspense fallback={<SectionLoader />}>
                   <RiskMap risks={geoRisks} />
@@ -241,30 +243,34 @@ export default function App() {
           </div>
         </main>
 
-        <footer className="min-h-[80vh] flex flex-col justify-between p-6 md:p-12 bg-text text-background relative overflow-hidden">
+        <footer className="min-h-[80vh] bg-text text-background relative overflow-hidden">
             <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <div className="absolute left-12 top-0 bottom-0 w-[1px] bg-white"></div>
-                <div className="absolute right-12 top-0 bottom-0 w-[1px] bg-white"></div>
+                <div className="absolute left-[3vw] top-0 bottom-0 w-[1px] bg-white"></div>
+                <div className="absolute right-[3vw] top-0 bottom-0 w-[1px] bg-white"></div>
             </div>
 
-            <div className="flex justify-between items-start pt-12">
-                <h2 className="font-serif text-[15vw] leading-[0.8]">
-                  SEMI<br/>TRACE
-                </h2>
+            <div className="w-[95%] mx-auto min-h-[80vh] flex flex-col justify-between py-12">
+              <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6">
+                  <div className="col-span-4 md:col-span-12">
+                    <h2 className="font-serif text-[15vw] leading-[0.8]">
+                      SEMI<br/>TRACE
+                    </h2>
+                  </div>
+              </div>
+              
+              <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 items-end">
+                  <div className="col-span-4 md:col-span-6 flex gap-8 md:gap-12 font-sans text-xs font-bold tracking-widest mb-8 md:mb-0">
+                    <a href="#" className="hover:text-accent transition-colors">INSTAGRAM</a>
+                    <a href="#" className="hover:text-accent transition-colors">TWITTER</a>
+                    <a href="#" className="hover:text-accent transition-colors">LINKEDIN</a>
+                  </div>
+                  <div className="col-span-4 md:col-span-6 text-left md:text-right">
+                    <p className="font-serif text-2xl mb-4 italic">Essential Intelligence.</p>
+                    <p className="font-sans text-xs text-white/50">© 2025 SEMITRACE ANALYTICS</p>
+                  </div>
+              </div>
             </div>
-            
-            <div className="flex flex-col md:flex-row justify-between items-end gap-12 pb-12">
-                <div className="flex gap-12 font-sans text-xs font-bold tracking-widest">
-                  <a href="#" className="hover:text-accent transition-colors">INSTAGRAM</a>
-                  <a href="#" className="hover:text-accent transition-colors">TWITTER</a>
-                  <a href="#" className="hover:text-accent transition-colors">LINKEDIN</a>
-                </div>
-                <div className="text-right">
-                  <p className="font-serif text-2xl mb-4 italic">Essential Intelligence.</p>
-                  <p className="font-sans text-xs text-white/50">© 2025 SEMITRACE ANALYTICS</p>
-                </div>
-            </div>
-          </footer>
+        </footer>
       </div>
     </ErrorBoundary>
   );

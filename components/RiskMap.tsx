@@ -189,9 +189,9 @@ export const RiskMap: React.FC<{ risks?: GeoRisk[] }> = ({ risks = [] }) => {
          </div>
       </div>
 
-      <div className="grid grid-cols-4 md:grid-cols-12 gap-0 border-t-[3px] border-text">
+      <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 border-t-[3px] border-text">
         {/* List Section - Spans 5 cols for readability */}
-        <div className="col-span-4 md:col-span-5 border-r-[3px] border-text" role="list">
+        <div className="col-span-4 md:col-span-5" role="list">
             {risks.map((risk, index) => (
               <div 
                 key={risk.id}
@@ -220,7 +220,7 @@ export const RiskMap: React.FC<{ risks?: GeoRisk[] }> = ({ risks = [] }) => {
                 className={`
                     group relative border-b-[3px] border-text p-8 md:p-10 cursor-pointer transition-all duration-300
                     focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent
-                    ${selectedId === risk.id ? 'bg-surface' : 'hover:bg-surface'}
+                    ${selectedId === risk.id ? 'bg-surface' : 'bg-background hover:bg-surface'}
                 `}
               >
                  <div className="flex justify-between items-start mb-6">

@@ -114,7 +114,7 @@ export const EnergyMonitor: React.FC = () => {
 
   return (
     <div className="w-full py-24 border-t-[3px] border-text bg-background">
-      <div className="w-full max-w-[94vw] mx-auto">
+      <div className="w-[95%] mx-auto">
         <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 items-end mb-16">
           <div className="col-span-4 md:col-span-5 max-w-xl">
             <span className="font-mono text-sm font-bold text-accent tracking-widest block mb-6">03 — THERMODYNAMICS</span>
@@ -139,9 +139,9 @@ export const EnergyMonitor: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 md:grid-cols-12 gap-0 border-[3px] border-text">
+        <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 border-t-[3px] border-b-[3px] border-text">
             {/* Left Col: Hub Selector - Spans 4 cols */}
-            <div className="col-span-4 md:col-span-4 border-r-[3px] border-text bg-surface/30 max-h-[700px] overflow-y-auto">
+            <div className="col-span-4 md:col-span-4 bg-surface/30 max-h-[700px] overflow-y-auto">
                 <div className="p-4 border-b-[3px] border-text sticky top-0 bg-[#E1DED8] z-10">
                     <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-secondary">Data Center Hubs</span>
                 </div>

@@ -135,7 +135,7 @@ export const ToolingTracker: React.FC = () => {
 
   return (
     <div className="w-full py-24 bg-background border-t-[3px] border-text">
-      <div className="w-full max-w-[94vw] mx-auto">
+      <div className="w-[95%] mx-auto">
         <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 items-end mb-20 px-0 md:px-0">
           <div className="col-span-4 md:col-span-8 max-w-xl">
             <span className="font-mono text-sm font-bold text-accent tracking-widest block mb-6">04 — INDUSTRIAL BASE</span>

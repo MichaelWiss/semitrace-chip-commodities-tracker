@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 
 export const Hero: React.FC = () => {
   return (
-    <div className="relative min-h-[90vh] w-full flex flex-col justify-end bg-background pb-12 pt-32 px-6 md:px-12 overflow-hidden">
+    <div className="relative min-h-[90vh] w-full flex flex-col justify-end bg-background pb-12 overflow-hidden">
       
       {/* Content Container */}
-      <div className="w-full max-w-[94vw] mx-auto z-10 flex flex-col">
+      <div className="w-[95%] mx-auto z-10 flex flex-col">
         
         {/* Massive Headline */}
         <motion.h1 
