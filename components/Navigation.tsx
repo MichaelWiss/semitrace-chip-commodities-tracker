@@ -4,34 +4,20 @@ import { motion } from 'framer-motion';
 export const Navigation: React.FC = () => {
   return (
     <motion.nav 
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-6 md:px-12 md:py-8 text-text"
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-5 text-text bg-background border-b-[3px] border-text"
     >
       <div className="flex flex-col">
-        <span className="font-serif text-2xl font-bold tracking-tighter leading-none">SEMI</span>
-        <span className="font-serif text-2xl font-bold tracking-tighter leading-none ml-2">TRACE</span>
+        <span className="font-sans text-xl font-extrabold tracking-tighter text-text uppercase">SEMI_TRACE</span>
       </div>
       
-      <div className="hidden md:flex items-center gap-12">
-        <a href="#materials" aria-label="Go to materials index" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">INDEX</a>
-        <a href="#risk" aria-label="Go to risk map" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">RISK MAP</a>
-        <a href="#energy" aria-label="Go to energy monitor" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">ENERGY</a>
-        <a href="#tooling" aria-label="Go to industrial tooling" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">INDUSTRIAL</a>
-        <a href="#analysis" aria-label="Go to analysis section" className="text-xs font-sans font-semibold tracking-[0.1em] hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">ANALYSIS</a>
-      </div>
-
-      <div>
-        <div 
-          className="group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" 
-          role="button" 
-          aria-label="Toggle menu" 
-          tabIndex={0}
-        >
-          <div className="h-[2px] w-8 bg-text mb-1.5 transition-all group-hover:w-6 ml-auto"></div>
-          <div className="h-[2px] w-8 bg-text transition-all group-hover:w-4 ml-auto"></div>
-        </div>
+      <div className="flex items-center gap-6 md:gap-8">
+        <a href="#materials" className="hidden md:inline-block font-mono text-xs font-bold uppercase tracking-widest hover:text-accent transition-colors">Materials</a>
+        <a href="#risk" className="hidden md:inline-block font-mono text-xs font-bold uppercase tracking-widest hover:text-accent transition-colors">Geo-Risk</a>
+        <a href="#energy" className="hidden md:inline-block font-mono text-xs font-bold uppercase tracking-widest hover:text-accent transition-colors">Energy</a>
+        <a href="#tooling" className="hidden md:inline-block font-mono text-xs font-bold uppercase tracking-widest hover:text-accent transition-colors">Foundry</a>
       </div>
     </motion.nav>
   );

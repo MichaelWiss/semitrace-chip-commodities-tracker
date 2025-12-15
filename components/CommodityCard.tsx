@@ -68,20 +68,20 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
       onFocus={() => setIsHovered(true)}
       onBlur={() => setIsHovered(false)}
       tabIndex={0}
-      className="group relative border-b border-subtle py-8 cursor-pointer transition-all duration-500 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      className="group relative border-b-[3px] border-text py-12 cursor-pointer transition-all duration-500 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-4 md:px-0 relative z-10">
         
         {/* Index & Name */}
         <div className="flex items-center gap-8 w-full md:w-1/3">
-          <span className="font-mono text-xs text-secondary border border-subtle rounded-full w-8 h-8 flex items-center justify-center">
+          <span className="font-mono text-sm font-bold text-text border-2 border-text rounded-full w-10 h-10 flex items-center justify-center">
             {String(index + 1).padStart(2, '0')}
           </span>
           <div>
-             <h3 className="font-serif text-3xl text-text group-hover:text-accent transition-colors duration-300">
+             <h3 className="font-sans text-4xl font-bold tracking-tight text-text group-hover:text-accent transition-colors duration-300">
                 {data.name}
              </h3>
-             <span className="font-sans text-[10px] tracking-widest uppercase text-secondary">
+             <span className="font-mono text-xs font-bold tracking-widest uppercase text-secondary">
                {data.category}
              </span>
           </div>
@@ -90,22 +90,22 @@ const CommodityCardComponent: React.FC<Props> = ({ data, index }) => {
         {/* Price Data & Outlook */}
         <div className="flex items-center gap-8 md:gap-16 w-full md:w-1/3 justify-start md:justify-center">
           <div>
-             <span className="font-mono text-xl text-text font-medium">{data.price.toLocaleString()}</span>
-             <span className="block font-sans text-[10px] text-secondary uppercase tracking-wider">{data.currency}</span>
+             <span className="font-mono text-2xl text-text font-bold tracking-tighter">{data.price.toLocaleString()}</span>
+             <span className="block font-mono text-[10px] font-bold text-secondary uppercase tracking-wider">{data.currency}</span>
           </div>
           <div className="text-right">
-             <span className={`font-mono text-lg ${isPositive ? 'text-text' : 'text-accent'}`}>
+             <span className={`font-mono text-xl font-bold tracking-tighter ${isPositive ? 'text-text' : 'text-accent'}`}>
                {isPositive ? '↑' : '↓'} {Math.abs(data.changePercentage)}%
              </span>
-             <span className="block font-sans text-[10px] text-secondary uppercase tracking-wider">24h Change</span>
+             <span className="block font-mono text-[10px] font-bold text-secondary uppercase tracking-wider">24h Change</span>
           </div>
           {/* Outlook Indicator */}
           <div className="hidden lg:block text-right">
              <div className="flex items-center justify-end gap-2">
-                {outlookStatus === 'Shortage' && <span className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-accent/50" />}
-                <span className={`font-mono text-lg ${outlookColor}`}>{outlookStatus.toUpperCase()}</span>
+                {outlookStatus === 'Shortage' && <span className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse shadow-accent/50" />}
+                <span className={`font-mono text-lg font-bold ${outlookColor}`}>{outlookStatus.toUpperCase()}</span>
              </div>
-             <span className="block font-sans text-[10px] text-secondary uppercase tracking-wider">6M Supply Forecast</span>
+             <span className="block font-mono text-[10px] font-bold text-secondary uppercase tracking-wider">6M Forecast</span>
           </div>
         </div>
 

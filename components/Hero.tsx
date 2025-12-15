@@ -1,85 +1,94 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 
 export const Hero: React.FC = () => {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  
   return (
-    <div ref={ref} className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-20">
+    <div className="relative min-h-[90vh] w-full flex flex-col justify-end bg-background pb-12 pt-32 px-6 md:px-12 overflow-hidden">
       
-      {/* Editorial Decorative Lines */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none">
-        <div className="absolute left-6 md:left-12 top-0 bottom-0 w-[1px] bg-subtle"></div>
-        <div className="absolute right-6 md:right-12 top-0 bottom-0 w-[1px] bg-subtle"></div>
-        <div className="absolute left-1/4 top-0 bottom-0 w-[1px] bg-subtle opacity-50 hidden md:block"></div>
-        <div className="absolute right-1/4 top-0 bottom-0 w-[1px] bg-subtle opacity-50 hidden md:block"></div>
-      </div>
-
-      <motion.div style={{ y }} className="z-10 text-center flex flex-col items-center max-w-[90vw]">
+      {/* Content Container */}
+      <div className="w-full max-w-[94vw] mx-auto z-10 flex flex-col">
         
-        <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="mb-8"
+        {/* Massive Headline */}
+        <motion.h1 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif text-[15vw] md:text-[16vw] tracking-tighter text-text leading-[0.8] mb-8 md:mb-12 origin-left"
         >
-          <span className="inline-block border border-text px-4 py-1 rounded-full text-xs font-sans font-semibold tracking-widest uppercase">
-            Global Supply Chain Monitor
-          </span>
+          Raw Material
+        </motion.h1>
+
+        {/* The 'Vent' Divider Block */}
+        <motion.div 
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.2, delay: 0.4, ease: "easeInOut" }}
+            className="w-full origin-left"
+        >
+             {/* Text Row: Technical Header */}
+             <div className="border-t border-b border-text py-1 mb-1.5 flex justify-between items-end">
+                <span className="font-mono text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-text">
+                    SEMITRACE ANALYTICS
+                </span>
+                <div className="flex gap-4 md:gap-8">
+                    <span className="font-mono text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-text hidden md:inline-block">
+                        REAL-TIME SUPPLY CHAIN INTELLIGENCE
+                    </span>
+                    <span className="font-mono text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-text">
+                        © 2025
+                    </span>
+                </div>
+             </div>
+             
+             {/* The 'Vent' Lines Style */}
+             <div className="flex flex-col gap-[3px] pb-8 md:pb-12">
+                <div className="h-[4px] md:h-[5px] w-full bg-text"></div>
+                <div className="h-[4px] md:h-[5px] w-full bg-text"></div>
+                <div className="h-[4px] md:h-[5px] w-full bg-text"></div>
+                <div className="h-[4px] md:h-[5px] w-full bg-text"></div>
+             </div>
         </motion.div>
 
-        <div className="relative">
-          <motion.h1 
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="font-serif text-[15vw] md:text-[12vw] tracking-tighter text-text leading-[0.85] relative z-10"
-          >
-            RAW<br/>
-            <span className="italic text-secondary font-light">MATERIAL</span>
-          </motion.h1>
-          
-          {/* Decorative Circle behind text */}
+        {/* Lower Info Blocks - 12 Column Grid */}
+        <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 items-start pt-6 border-t border-transparent">
           <motion.div 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.5, delay: 0.2 }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] border border-accent rounded-full opacity-20 -z-10"
-          />
-        </div>
-
-        <div className="mt-12 md:mt-24 flex flex-col md:flex-row gap-8 md:gap-24 items-start md:items-end text-left px-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="max-w-xs"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="col-span-4 md:col-span-4"
           >
-            <h3 className="font-sans font-bold text-sm mb-2 uppercase tracking-wide">Semiconductor Index</h3>
-            <p className="font-serif text-lg leading-snug text-secondary">
+            <h3 className="font-mono font-bold text-xs mb-3 uppercase tracking-tight decoration-text underline underline-offset-4 decoration-2">Semiconductor Index</h3>
+            <p className="font-sans text-sm font-medium leading-relaxed text-secondary max-w-xs">
               Tracking the 14 critical elements required to manufacture a 3nm silicon wafer.
             </p>
           </motion.div>
 
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="max-w-xs"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1.2 }}
+            className="col-span-4 md:col-span-4"
           >
-             <h3 className="font-sans font-bold text-sm mb-2 uppercase tracking-wide">Data Sources</h3>
-             <p className="font-sans text-sm text-secondary">
+             <h3 className="font-mono font-bold text-xs mb-3 uppercase tracking-tight decoration-text underline underline-offset-4 decoration-2">Data Sources</h3>
+             <p className="font-sans text-sm font-medium text-secondary leading-relaxed max-w-xs">
                Integrated live streams from LME, COMEX, and proprietary distinct mining output analysis.
              </p>
           </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1.4 }}
+            className="col-span-4 md:col-span-4"
+          >
+             <h3 className="font-mono font-bold text-xs mb-3 uppercase tracking-tight decoration-text underline underline-offset-4 decoration-2">Market Coverage</h3>
+             <p className="font-sans text-sm font-medium text-secondary leading-relaxed max-w-xs">
+               Real-time arbitrage monitoring across Asian, European, and North American spot markets.
+             </p>
+          </motion.div>
         </div>
-      </motion.div>
+
+      </div>
     </div>
   );
 };

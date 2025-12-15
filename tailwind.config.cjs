@@ -10,16 +10,17 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['Italiana', 'serif'],
+        serif: ['Inter', 'sans-serif'], // Replacing Italiana with Inter for the bold headings
         sans: ['Manrope', 'sans-serif'],
       },
       colors: {
-        background: '#F4F1EA', // Warm Alabaster Paper
-        surface: '#EAE7E0',    // Slightly darker paper
-        text: '#1A1918',       // Sharp Charcoal
-        secondary: '#6B665F',  // Warm Grey
-        accent: '#D94E28',     // International Orange / Copper
-        subtle: '#D6D3CD',     // Border color
+        background: '#E1DED8', // Stone / Parchment (Odin's Crow)
+        surface: '#D1CDC7',    // Darker Stone for interactions
+        text: '#1A1918',       // Sharp Charcoal / Black
+        secondary: '#4A453F',  // Dark Mineral Grey (High Contrast)
+        accent: '#D94E28',     // International Orange
+        subtle: '#ABA7A0',     // Darker border for inputs/subtle lines
+        strong: '#1A1918',     // New: Strong border color
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

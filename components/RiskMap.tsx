@@ -172,26 +172,26 @@ export const RiskMap: React.FC<{ risks?: GeoRisk[] }> = ({ risks = [] }) => {
 
   return (
     <div className="w-full py-24 md:py-32">
-      <div className="flex flex-col md:flex-row justify-between items-start mb-16 px-6 md:px-0">
-         <div className="max-w-xl">
-             <span className="font-mono text-xs text-accent tracking-widest block mb-6">02 — GEOPOLITICAL RISK</span>
-             <h2 className="font-serif text-5xl md:text-6xl leading-none text-text mb-6">
+      <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 items-start mb-16 px-0 md:px-0">
+         <div className="col-span-4 md:col-span-8 max-w-xl">
+             <span className="font-mono text-sm font-bold text-accent tracking-widest block mb-6">02 — GEOPOLITICAL RISK</span>
+             <h2 className="font-sans font-extrabold text-5xl md:text-7xl leading-[0.9] text-text mb-8 tracking-tighter">
                 Supply Chain <br />
-                <span className="italic text-secondary">Vulnerabilities</span>
+                <span className="text-secondary">Vulnerabilities</span>
              </h2>
-             <p className="font-serif text-lg text-secondary">
+             <p className="font-mono text-sm font-medium text-secondary leading-relaxed max-w-lg">
                Real-time monitoring of geopolitical friction points affecting critical semiconductor material flow.
              </p>
          </div>
-         <div className="hidden md:block">
-            <div className="w-32 h-[1px] bg-text mb-4"></div>
-            <span className="font-mono text-xs">GLOBAL THREAT LEVEL: <br/><span className="text-accent">ELEVATED</span></span>
+         <div className="hidden md:block col-span-4 md:col-span-4 place-self-end text-right">
+            <div className="w-32 h-[3px] bg-text mb-4 ml-auto"></div>
+            <span className="font-mono text-xs font-bold">GLOBAL THREAT LEVEL: <br/><span className="text-accent text-lg">ELEVATED</span></span>
          </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-text">
-        {/* List Section */}
-        <div className="border-r border-text border-opacity-20" role="list">
+      <div className="grid grid-cols-4 md:grid-cols-12 gap-0 border-t-[3px] border-text">
+        {/* List Section - Spans 5 cols for readability */}
+        <div className="col-span-4 md:col-span-5 border-r-[3px] border-text" role="list">
             {risks.map((risk, index) => (
               <div 
                 key={risk.id}
@@ -218,32 +218,32 @@ export const RiskMap: React.FC<{ risks?: GeoRisk[] }> = ({ risks = [] }) => {
                   }
                 }}
                 className={`
-                    group relative border-b border-text border-opacity-20 p-6 md:p-10 cursor-pointer transition-all duration-300
+                    group relative border-b-[3px] border-text p-8 md:p-10 cursor-pointer transition-all duration-300
                     focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent
-                    ${selectedId === risk.id ? 'bg-surface' : 'hover:bg-white'}
+                    ${selectedId === risk.id ? 'bg-surface' : 'hover:bg-surface'}
                 `}
               >
-                 <div className="flex justify-between items-start mb-4">
-                    <div className="flex items-center gap-3">
-                        <span className="font-mono text-xs text-secondary border border-subtle px-2 py-0.5 rounded-full">
+                 <div className="flex justify-between items-start mb-6">
+                    <div className="flex items-center gap-4">
+                        <span className="font-mono text-sm font-bold text-text border-2 border-text px-2 py-1">
                             {risk.code}
                         </span>
-                        <h3 className="font-serif text-2xl group-hover:text-accent transition-colors">{risk.title}</h3>
+                        <h3 className="font-sans font-bold text-2xl md:text-3xl tracking-tight group-hover:text-accent transition-colors">{risk.title}</h3>
                     </div>
                     {risk.impact === 'CRITICAL' && (
-                        <span className="font-sans text-[10px] bg-accent text-white px-2 py-1 tracking-widest uppercase animate-pulse">
+                        <span className="font-mono text-[10px] font-bold bg-accent text-white px-2 py-1 uppercase animate-pulse">
                             Critical
                         </span>
                     )}
                  </div>
                  
-                 <p className="font-serif text-secondary text-lg mb-4 pr-8 leading-snug">
+                 <p className="font-sans font-medium text-secondary text-lg mb-6 pr-8 leading-snug">
                      {risk.shortDesc}
                  </p>
 
                  <div className="flex gap-4">
                      {risk.materials.map(m => (
-                         <span key={m} className="font-mono text-[10px] uppercase border-b border-subtle text-secondary">
+                         <span key={m} className="font-mono text-xs font-bold uppercase border-b-2 border-secondary text-secondary">
                              {m}
                          </span>
                      ))}
@@ -253,14 +253,14 @@ export const RiskMap: React.FC<{ risks?: GeoRisk[] }> = ({ risks = [] }) => {
                  <motion.div 
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: hoveredId === risk.id ? 1 : 0 }}
-                    className="absolute bottom-0 left-0 h-[2px] w-full bg-accent origin-left"
+                    className="absolute bottom-0 left-0 h-[3px] w-full bg-accent origin-left"
                  />
               </div>
             ))}
         </div>
 
-        {/* Map Visualization */}
-        <div className="relative h-[600px] overflow-hidden bg-[#E6E2D8] flex items-center justify-center">
+        {/* Map Visualization - Spans 7 cols */}
+        <div className="col-span-4 md:col-span-7 relative h-[600px] overflow-hidden bg-[#E6E2D8] flex items-center justify-center">
             {/* 3D Globe Container */}
             <div className="w-full h-full cursor-move">
                 <GlobeVisualization hoveredId={hoveredId || selectedId} risks={risks} />

@@ -16,34 +16,34 @@ const HubSelectorItem = React.memo<HubSelectorItemProps>(({ hub, isSelected, onS
   <div 
     onClick={() => onSelect(hub)}
     className={`
-      group p-6 cursor-pointer border-b border-text/10 transition-colors
-      ${isSelected ? 'bg-text text-background' : 'hover:bg-white'}
+      group p-6 cursor-pointer border-b-2 border-text transition-colors
+      ${isSelected ? 'bg-text text-background' : 'hover:bg-surface'}
     `}
   >
     <div className="flex justify-between items-center mb-2">
       <span className="font-sans font-bold text-sm tracking-wide uppercase">{hub.name}</span>
-      <span className={`font-mono text-xs px-2 py-0.5 border rounded-full ${
-        isSelected ? 'border-white/30' : 'border-black/20'
+      <span className={`font-mono text-xs px-2 py-0.5 border-2 rounded-full font-bold ${
+        isSelected ? 'border-white/30' : 'border-text'
       }`}>
         ${hub.spotPrice} / MWh
       </span>
     </div>
     <div className="flex justify-between items-end">
       <div className="flex flex-col">
-        <span className={`font-serif text-xs italic ${
+        <span className={`font-mono text-xs font-bold ${
           isSelected ? 'text-white/60' : 'text-secondary'
         }`}>
           {hub.region}
         </span>
-        <span className={`font-mono text-[9px] mt-1 uppercase ${
+        <span className={`font-mono text-[9px] mt-1 uppercase font-bold ${
           isSelected ? 'text-white/40' : 'text-secondary/60'
         }`}>
           RE: {hub.renewables.currentSolarLoad}% S | {hub.renewables.currentWindLoad}% W
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <span className="font-mono text-[10px] uppercase">Strain:</span>
-        <div className={`w-2 h-2 rounded-full ${
+        <span className="font-mono text-[10px] uppercase font-bold">Strain:</span>
+        <div className={`w-3 h-3 border border-black rounded-full ${
           hub.gridStrain === 'Critical' ? 'bg-accent animate-pulse' : 
           hub.gridStrain === 'High' ? 'bg-orange-400' : 'bg-green-500'
         }`}></div>
@@ -113,37 +113,37 @@ export const EnergyMonitor: React.FC = () => {
     : "Low renewable output may increase reliance on gas/coal peaker plants.";
 
   return (
-    <div className="w-full py-24 border-t border-text/10 bg-background">
-      <div className="max-w-[90vw] mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16">
-          <div className="max-w-xl">
-            <span className="font-mono text-xs text-accent tracking-widest block mb-6">03 — THERMODYNAMICS</span>
-            <h2 className="font-serif text-5xl md:text-6xl leading-none text-text">
+    <div className="w-full py-24 border-t-[3px] border-text bg-background">
+      <div className="w-full max-w-[94vw] mx-auto">
+        <div className="grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 items-end mb-16">
+          <div className="col-span-4 md:col-span-5 max-w-xl">
+            <span className="font-mono text-sm font-bold text-accent tracking-widest block mb-6">03 — THERMODYNAMICS</span>
+            <h2 className="font-sans font-extrabold text-5xl md:text-7xl leading-[0.9] text-text tracking-tighter">
               Compute <br />
-              <span className="italic text-secondary">Expenditure</span>
+              <span className="text-secondary">Expenditure</span>
             </h2>
           </div>
-          <div className="flex flex-wrap gap-8 md:gap-12 mt-8 md:mt-0 text-right">
+          <div className="col-span-4 md:col-span-7 flex flex-wrap gap-8 md:gap-12 mt-8 md:mt-0 justify-end text-right">
              <div>
-                <span className="block font-mono text-xs text-secondary tracking-widest mb-1">GLOBAL PUE AVG</span>
-                <span className="font-serif text-4xl text-text">{metrics.globalPUE}</span>
+                <span className="block font-mono text-xs font-bold text-secondary tracking-widest mb-1">GLOBAL PUE AVG</span>
+                <span className="font-mono text-4xl font-bold text-text tracking-tighter">{metrics.globalPUE}</span>
              </div>
              <div>
-                <span className="block font-mono text-xs text-secondary tracking-widest mb-1">RENEWABLE MIX</span>
-                <span className="font-serif text-4xl text-text">{Math.round(metrics.globalRenewableUsage)}%</span>
+                <span className="block font-mono text-xs font-bold text-secondary tracking-widest mb-1">RENEWABLE MIX</span>
+                <span className="font-mono text-4xl font-bold text-text tracking-tighter">{Math.round(metrics.globalRenewableUsage)}%</span>
              </div>
              <div>
-                <span className="block font-mono text-xs text-secondary tracking-widest mb-1">AI LOAD (GW)</span>
-                <span className="font-serif text-4xl text-accent">{metrics.aiTrainingLoad}</span>
+                <span className="block font-mono text-xs font-bold text-secondary tracking-widest mb-1">AI LOAD (GW)</span>
+                <span className="font-mono text-4xl font-bold text-text tracking-tighter">{metrics.aiTrainingLoad}</span>
              </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-0 border border-text/20">
-            {/* Left Col: Hub Selector */}
-            <div className="md:col-span-5 border-r border-text/20 bg-surface/50 max-h-[700px] overflow-y-auto">
-                <div className="p-4 border-b border-text/20 sticky top-0 bg-[#F2EFE8] z-10">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-secondary">Data Center Hubs</span>
+        <div className="grid grid-cols-4 md:grid-cols-12 gap-0 border-[3px] border-text">
+            {/* Left Col: Hub Selector - Spans 4 cols */}
+            <div className="col-span-4 md:col-span-4 border-r-[3px] border-text bg-surface/30 max-h-[700px] overflow-y-auto">
+                <div className="p-4 border-b-[3px] border-text sticky top-0 bg-[#E1DED8] z-10">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-secondary">Data Center Hubs</span>
                 </div>
                 {hubs.map((hub) => (
                     <HubSelectorItem
@@ -155,8 +155,8 @@ export const EnergyMonitor: React.FC = () => {
                 ))}
             </div>
 
-            {/* Right Col: Details */}
-            <div className="md:col-span-7 p-8 md:p-12 flex flex-col justify-center">
+            {/* Right Col: Details - Spans 8 cols */}
+            <div className="col-span-4 md:col-span-8 p-8 md:p-12 flex flex-col justify-center">
                  <div className="flex justify-between items-start mb-8">
                      <div className="font-mono text-[10px] text-accent border border-accent px-2 py-1 rounded inline-block">
                         LIVE METRICS
